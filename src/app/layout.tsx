@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'HASA WaaS Platform Admin',
-  description: 'Admin dashboard for Aptos Wallet-as-a-Service Platform',
+  title: "HASA WaaS Platform Admin",
+  description: "Admin dashboard for Aptos Wallet-as-a-Service Platform",
 };
 
 export default function RootLayout({

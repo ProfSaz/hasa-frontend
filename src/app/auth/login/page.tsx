@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     // Mock API call for login
@@ -21,15 +21,15 @@ export default function LoginPage() {
       // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      if (email === 'admin@hasa.com' && password === 'password123') {
+      if (email === "admin@hasa.com" && password === "password123") {
         // Simulate successful login, store a mock token
-        localStorage.setItem('admin_token', 'mock-jwt-token');
-        router.push('/platform-admin');
+        localStorage.setItem("admin_token", "mock-jwt-token");
+        router.push("/platform-admin");
       } else {
-        setError('Invalid credentials. Please try again.');
+        setError("Invalid credentials. Please try again.");
       }
     } catch (err) {
-      setError('An unexpected error occurred. Please try again later.');
+      setError("An unexpected error occurred. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -43,7 +43,10 @@ export default function LoginPage() {
         </h1>
         <form onSubmit={handleLogin}>
           <div className="mb-6">
-            <label htmlFor="email" className="block text-gray-300 text-sm font-semibold mb-2">
+            <label
+              htmlFor="email"
+              className="block text-gray-300 text-sm font-semibold mb-2"
+            >
               Email Address
             </label>
             <input
@@ -57,7 +60,10 @@ export default function LoginPage() {
             />
           </div>
           <div className="mb-8">
-            <label htmlFor="password" className="block text-gray-300 text-sm font-semibold mb-2">
+            <label
+              htmlFor="password"
+              className="block text-gray-300 text-sm font-semibold mb-2"
+            >
               Password
             </label>
             <input
@@ -78,11 +84,11 @@ export default function LoginPage() {
             className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-300 ease-in-out transform hover:scale-105"
             disabled={loading}
           >
-            {loading ? 'Logging In...' : 'Login'}
+            {loading ? "Logging In..." : "Login"}
           </button>
         </form>
         <p className="mt-6 text-center text-gray-400 text-sm">
-          Forgot your password?{' '}
+          Forgot your password?{" "}
           <Link href="#" className="text-green-500 hover:underline">
             Reset it
           </Link>

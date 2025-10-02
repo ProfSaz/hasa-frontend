@@ -1,111 +1,123 @@
-"use client"
-import React, { useState, useEffect } from 'react';
-import { Search, Copy, Check, ChevronRight, Book, Key, Users, Wallet, ArrowLeftRight, Settings, Shield, Zap } from 'lucide-react';
+"use client";
+import React, { useState, useEffect } from "react";
+import {
+  Search,
+  Copy,
+  Check,
+  ChevronRight,
+  Book,
+  Key,
+  Users,
+  Wallet,
+  ArrowLeftRight,
+  Settings,
+  Shield,
+  Zap,
+} from "lucide-react";
 
 export default function DocsPage() {
-  const [searchQuery, setSearchQuery] = useState('');
-const [activeSection, setActiveSection] = useState('getting-started');
-const [activeEndpoint, setActiveEndpoint] = useState<string | null>(null);
-const [copiedCode, setCopiedCode] = useState<string | number | null>(null);
-const [activeTab, setActiveTab] = useState('curl');
-const [collapsedSections, setCollapsedSections] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeSection, setActiveSection] = useState("getting-started");
+  const [activeEndpoint, setActiveEndpoint] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | number | null>(null);
+  const [activeTab, setActiveTab] = useState("curl");
+  const [collapsedSections, setCollapsedSections] = useState<string[]>([]);
 
-useEffect(() => {
-  const hash = window.location.hash.replace('#', '');
-  if (hash) {
-    // Map section names to first endpoint IDs
-    const sectionMapping: Record<string, string> = {
-      'getting-started': 'introduction',
-      'organization': 'org-profile',
-      'users': 'users-create',
-      'wallets': 'wallets-create',
-      'transactions': 'tx-transfer'
-    };
-    
-    // Check if hash is a section or direct endpoint
-    const targetId = sectionMapping[hash] || hash;
-    
-    if (endpoints[targetId]) {
-      setActiveSection(targetId);
-      setActiveEndpoint(targetId);
+  useEffect(() => {
+    const hash = window.location.hash.replace("#", "");
+    if (hash) {
+      // Map section names to first endpoint IDs
+      const sectionMapping: Record<string, string> = {
+        "getting-started": "introduction",
+        organization: "org-profile",
+        users: "users-create",
+        wallets: "wallets-create",
+        transactions: "tx-transfer",
+      };
+
+      // Check if hash is a section or direct endpoint
+      const targetId = sectionMapping[hash] || hash;
+
+      if (endpoints[targetId]) {
+        setActiveSection(targetId);
+        setActiveEndpoint(targetId);
+      }
     }
-  }
-}, []);
+  }, []);
 
-const copyToClipboard = (code: string, id: string | number) => {
-  navigator.clipboard.writeText(code);
-  setCopiedCode(id);
-  setTimeout(() => setCopiedCode(null), 2000);
-};
-
-
+  const copyToClipboard = (code: string, id: string | number) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(id);
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
 
   const navigation = [
     {
-      title: 'Getting Started',
+      title: "Getting Started",
       icon: <Book className="w-4 h-4" />,
       items: [
-        { id: 'introduction', label: 'Introduction' },
-        { id: 'authentication', label: 'Authentication' },
+        { id: "introduction", label: "Introduction" },
+        { id: "authentication", label: "Authentication" },
         // { id: 'quick-start', label: 'Quick Start' },
         // { id: 'environments', label: 'Environments' },
-      ]
+      ],
     },
     {
-      title: 'Organization API',
+      title: "Organization API",
       icon: <Settings className="w-4 h-4" />,
       items: [
-        { id: 'org-profile', label: 'Get Profile' },
-        { id: 'org-settings', label: 'Update Settings' },
-        { id: 'org-limits', label: 'Get Limits' },
-        { id: 'org-api-keys', label: 'Manage API Keys' },
-        { id: 'org-metrics', label: 'Get Metrics' },
-      ]
+        { id: "org-profile", label: "Get Profile" },
+        { id: "org-settings", label: "Update Settings" },
+        { id: "org-limits", label: "Get Limits" },
+        { id: "org-api-keys", label: "Manage API Keys" },
+        { id: "org-metrics", label: "Get Metrics" },
+      ],
     },
     {
-      title: 'Users API',
+      title: "Users API",
       icon: <Users className="w-4 h-4" />,
       items: [
-        { id: 'users-create', label: 'Create User' },
-        { id: 'users-list', label: 'List Users' },
-        { id: 'users-get', label: 'Get User' },
-        { id: 'users-update', label: 'Update User' },
-        { id: 'users-delete', label: 'Delete User' },
-        { id: 'users-freeze', label: 'Freeze/Unfreeze User' },
-        { id: 'users-wallet', label: 'Get User Wallet' },
-      ]
+        { id: "users-create", label: "Create User" },
+        { id: "users-list", label: "List Users" },
+        { id: "users-get", label: "Get User" },
+        { id: "users-update", label: "Update User" },
+        { id: "users-delete", label: "Delete User" },
+        { id: "users-freeze", label: "Freeze/Unfreeze User" },
+        { id: "users-wallet", label: "Get User Wallet" },
+      ],
     },
     {
-      title: 'Wallets API',
+      title: "Wallets API",
       icon: <Wallet className="w-4 h-4" />,
       items: [
-        { id: 'wallets-create', label: 'Create Wallet' },
-        { id: 'wallets-list', label: 'List Wallets' },
-        { id: 'wallets-get', label: 'Get Wallet' },
-        { id: 'wallets-user', label: 'Get User Wallets' },
-        { id: 'wallets-sync', label: 'Sync Balance' },
-        { id: 'wallets-transfer', label: 'Transfer Funds' },
-        { id: 'wallets-status', label: 'Update Status' },
-      ]
+        { id: "wallets-create", label: "Create Wallet" },
+        { id: "wallets-list", label: "List Wallets" },
+        { id: "wallets-get", label: "Get Wallet" },
+        { id: "wallets-user", label: "Get User Wallets" },
+        { id: "wallets-sync", label: "Sync Balance" },
+        { id: "wallets-transfer", label: "Transfer Funds" },
+        { id: "wallets-status", label: "Update Status" },
+      ],
     },
     {
-      title: 'Transactions API',
+      title: "Transactions API",
       icon: <ArrowLeftRight className="w-4 h-4" />,
       items: [
-        { id: 'tx-transfer', label: 'Process Transfer' },
-        { id: 'tx-list', label: 'List Transactions' },
-        { id: 'tx-get', label: 'Get Transaction' },
-        { id: 'tx-wallet', label: 'Wallet Transactions' },
-        { id: 'tx-stats', label: 'Transaction Stats' },
-      ]
+        { id: "tx-transfer", label: "Process Transfer" },
+        { id: "tx-list", label: "List Transactions" },
+        { id: "tx-get", label: "Get Transaction" },
+        { id: "tx-wallet", label: "Wallet Transactions" },
+        { id: "tx-stats", label: "Transaction Stats" },
+      ],
     },
   ];
 
-  const endpoints: Record<string, any>  = {
+  const endpoints: Record<string, any> = {
     // Getting Started
-    'introduction': {
-      title: 'Introduction',
-      description: 'Welcome to HASA API documentation. Our API allows you to integrate Aptos wallet infrastructure into your application with ease.',
+    introduction: {
+      title: "Introduction",
+      description:
+        "Welcome to HASA API documentation. Our API allows you to integrate Aptos wallet infrastructure into your application with ease.",
       content: `
 ## Overview
 
@@ -130,13 +142,14 @@ HASA provides a comprehensive Wallet-as-a-Service platform built on Aptos blockc
 ## Support
 
 Need help? Contact us at support@hasa.io or visit our support portal.
-      `
+      `,
     },
-    'authentication': {
-      title: 'Authentication',
-      description: 'Learn how to authenticate your API requests using API keys and HMAC signatures.',
-      method: 'POST',
-      endpoint: '/api/v1/*',
+    authentication: {
+      title: "Authentication",
+      description:
+        "Learn how to authenticate your API requests using API keys and HMAC signatures.",
+      method: "POST",
+      endpoint: "/api/v1/*",
       content: `
 ## API Key Authentication
 
@@ -223,16 +236,16 @@ response = requests.post(
         'x-timestamp': timestamp,
         'x-signature': signature
     }
-)`
-      }
+)`,
+      },
     },
 
     // Organization APIs
-    'org-profile': {
-      title: 'Get Organization Profile',
-      description: 'Retrieve your organization profile information',
-      method: 'GET',
-      endpoint: '/api/v1/organization/profile',
+    "org-profile": {
+      title: "Get Organization Profile",
+      description: "Retrieve your organization profile information",
+      method: "GET",
+      endpoint: "/api/v1/organization/profile",
       response: `{
   "id": "org_1234567890",
   "legalName": "Acme Corporation",
@@ -249,14 +262,14 @@ response = requests.post(
         javascript: `const response = await hasa.organization.getProfile();
 console.log(response.data);`,
         python: `response = hasa.organization.get_profile()
-print(response)`
-      }
+print(response)`,
+      },
     },
-    'org-settings': {
-      title: 'Update Organization Settings',
-      description: 'Update your organization settings and preferences',
-      method: 'PATCH',
-      endpoint: '/api/v1/organization/settings',
+    "org-settings": {
+      title: "Update Organization Settings",
+      description: "Update your organization settings and preferences",
+      method: "PATCH",
+      endpoint: "/api/v1/organization/settings",
       request: `{
   "webhookUrl": "https://yourapp.com/webhooks",
   "autoConversion": true,
@@ -281,14 +294,14 @@ print(response)`
         python: `response = hasa.organization.update_settings({
     'webhook_url': 'https://yourapp.com/webhooks',
     'auto_conversion': True
-})`
-      }
+})`,
+      },
     },
-    'org-limits': {
-      title: 'Get Organization Limits',
-      description: 'View your current usage limits and quotas',
-      method: 'GET',
-      endpoint: '/api/v1/organization/limits',
+    "org-limits": {
+      title: "Get Organization Limits",
+      description: "View your current usage limits and quotas",
+      method: "GET",
+      endpoint: "/api/v1/organization/limits",
       response: `{
   "transactionLimits": {
     "daily": 100000,
@@ -308,14 +321,14 @@ print(response)`
         curl: `curl -X GET https://api.hasa.io/api/v1/organization/limits \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const limits = await hasa.organization.getLimits();`,
-        python: `limits = hasa.organization.get_limits()`
-      }
+        python: `limits = hasa.organization.get_limits()`,
+      },
     },
-    'org-api-keys': {
-      title: 'Get API Keys',
-      description: 'Retrieve your API keys information',
-      method: 'GET',
-      endpoint: '/api/v1/organization/api-keys',
+    "org-api-keys": {
+      title: "Get API Keys",
+      description: "Retrieve your API keys information",
+      method: "GET",
+      endpoint: "/api/v1/organization/api-keys",
       response: `{
   "publicKey": "pk_1234567890abcdef",
   "environment": "PRODUCTION",
@@ -326,16 +339,16 @@ print(response)`
         curl: `curl -X GET https://api.hasa.io/api/v1/organization/api-keys \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const keys = await hasa.organization.getApiKeys();`,
-        python: `keys = hasa.organization.get_api_keys()`
-      }
+        python: `keys = hasa.organization.get_api_keys()`,
+      },
     },
 
     // Users APIs
-    'users-create': {
-      title: 'Create User',
-      description: 'Create a new user in your organization',
-      method: 'POST',
-      endpoint: '/api/v1/users',
+    "users-create": {
+      title: "Create User",
+      description: "Create a new user in your organization",
+      method: "POST",
+      endpoint: "/api/v1/users",
       request: `{
   "externalUserId": "user_abc123",
   "profile": {
@@ -385,14 +398,14 @@ print(response)`
         'last_name': 'Doe',
         'email': 'john.doe@example.com'
     }
-})`
-      }
+})`,
+      },
     },
-    'users-list': {
-      title: 'List Users',
-      description: 'Get a paginated list of all users in your organization',
-      method: 'GET',
-      endpoint: '/api/v1/users?page=1&limit=20',
+    "users-list": {
+      title: "List Users",
+      description: "Get a paginated list of all users in your organization",
+      method: "GET",
+      endpoint: "/api/v1/users?page=1&limit=20",
       response: `{
   "data": [
     {
@@ -418,14 +431,14 @@ print(response)`
         curl: `curl -X GET "https://api.hasa.io/api/v1/users?page=1&limit=20" \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const users = await hasa.users.list({ page: 1, limit: 20 });`,
-        python: `users = hasa.users.list(page=1, limit=20)`
-      }
+        python: `users = hasa.users.list(page=1, limit=20)`,
+      },
     },
-    'users-get': {
-      title: 'Get User',
-      description: 'Retrieve details of a specific user',
-      method: 'GET',
-      endpoint: '/api/v1/users/:userId',
+    "users-get": {
+      title: "Get User",
+      description: "Retrieve details of a specific user",
+      method: "GET",
+      endpoint: "/api/v1/users/:userId",
       response: `{
   "id": "usr_9876543210",
   "externalUserId": "user_abc123",
@@ -447,14 +460,14 @@ print(response)`
         curl: `curl -X GET https://api.hasa.io/api/v1/users/usr_9876543210 \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const user = await hasa.users.get('usr_9876543210');`,
-        python: `user = hasa.users.get('usr_9876543210')`
-      }
+        python: `user = hasa.users.get('usr_9876543210')`,
+      },
     },
-    'users-wallet': {
-      title: 'Get User Wallet',
-      description: 'Retrieve wallet information for a specific user',
-      method: 'GET',
-      endpoint: '/api/v1/users/:userId/wallet',
+    "users-wallet": {
+      title: "Get User Wallet",
+      description: "Retrieve wallet information for a specific user",
+      method: "GET",
+      endpoint: "/api/v1/users/:userId/wallet",
       response: `{
   "id": "wlt_abc123",
   "userId": "usr_9876543210",
@@ -479,16 +492,16 @@ print(response)`
         curl: `curl -X GET https://api.hasa.io/api/v1/users/usr_9876543210/wallet \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const wallet = await hasa.users.getWallet('usr_9876543210');`,
-        python: `wallet = hasa.users.get_wallet('usr_9876543210')`
-      }
+        python: `wallet = hasa.users.get_wallet('usr_9876543210')`,
+      },
     },
 
     // Wallets APIs
-    'wallets-create': {
-      title: 'Create Wallet',
-      description: 'Create a new wallet for your organization or a user',
-      method: 'POST',
-      endpoint: '/api/v1/wallets',
+    "wallets-create": {
+      title: "Create Wallet",
+      description: "Create a new wallet for your organization or a user",
+      method: "POST",
+      endpoint: "/api/v1/wallets",
       request: `{
   "type": "USER",
   "userId": "usr_9876543210",
@@ -521,14 +534,14 @@ print(response)`
     'type': 'USER',
     'user_id': 'usr_9876543210',
     'label': 'Main Wallet'
-})`
-      }
+})`,
+      },
     },
-    'wallets-list': {
-      title: 'List Wallets',
-      description: 'Get all wallets in your organization',
-      method: 'GET',
-      endpoint: '/api/v1/wallets',
+    "wallets-list": {
+      title: "List Wallets",
+      description: "Get all wallets in your organization",
+      method: "GET",
+      endpoint: "/api/v1/wallets",
       response: `{
   "data": [
     {
@@ -554,14 +567,14 @@ print(response)`
         curl: `curl -X GET https://api.hasa.io/api/v1/wallets \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const wallets = await hasa.wallets.list();`,
-        python: `wallets = hasa.wallets.list()`
-      }
+        python: `wallets = hasa.wallets.list()`,
+      },
     },
-    'wallets-get': {
-      title: 'Get Wallet',
-      description: 'Retrieve details and balance of a specific wallet',
-      method: 'GET',
-      endpoint: '/api/v1/wallets/:id',
+    "wallets-get": {
+      title: "Get Wallet",
+      description: "Retrieve details and balance of a specific wallet",
+      method: "GET",
+      endpoint: "/api/v1/wallets/:id",
       response: `{
   "id": "wlt_abc123",
   "type": "USER",
@@ -582,14 +595,14 @@ print(response)`
         curl: `curl -X GET https://api.hasa.io/api/v1/wallets/wlt_abc123 \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const wallet = await hasa.wallets.get('wlt_abc123');`,
-        python: `wallet = hasa.wallets.get('wlt_abc123')`
-      }
+        python: `wallet = hasa.wallets.get('wlt_abc123')`,
+      },
     },
-    'wallets-transfer': {
-      title: 'Transfer Funds',
-      description: 'Transfer funds between wallets',
-      method: 'POST',
-      endpoint: '/api/v1/wallets/transfer',
+    "wallets-transfer": {
+      title: "Transfer Funds",
+      description: "Transfer funds between wallets",
+      method: "POST",
+      endpoint: "/api/v1/wallets/transfer",
       request: `{
   "fromWalletId": "wlt_abc123",
   "toAddress": "0xabcdef1234567890...",
@@ -628,14 +641,14 @@ print(response)`
     'to_address': '0xabcdef1234567890...',
     'asset': 'APT',
     'amount': '100.50'
-})`
-      }
+})`,
+      },
     },
-    'wallets-sync': {
-      title: 'Sync Wallet Balance',
-      description: 'Synchronize wallet balance with blockchain',
-      method: 'POST',
-      endpoint: '/api/v1/wallets/:id/sync',
+    "wallets-sync": {
+      title: "Sync Wallet Balance",
+      description: "Synchronize wallet balance with blockchain",
+      method: "POST",
+      endpoint: "/api/v1/wallets/:id/sync",
       response: `{
   "success": true,
   "wallet": {
@@ -653,16 +666,16 @@ print(response)`
         curl: `curl -X POST https://api.hasa.io/api/v1/wallets/wlt_abc123/sync \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const result = await hasa.wallets.sync('wlt_abc123');`,
-        python: `result = hasa.wallets.sync('wlt_abc123')`
-      }
+        python: `result = hasa.wallets.sync('wlt_abc123')`,
+      },
     },
 
     // Transactions APIs
-    'tx-transfer': {
-      title: 'Process Transfer',
-      description: 'Create and process a blockchain transfer',
-      method: 'POST',
-      endpoint: '/api/v1/transactions/process-transfer',
+    "tx-transfer": {
+      title: "Process Transfer",
+      description: "Create and process a blockchain transfer",
+      method: "POST",
+      endpoint: "/api/v1/transactions/process-transfer",
       request: `{
   "fromWalletId": "wlt_abc123",
   "toAddress": "0xabcdef1234567890...",
@@ -704,14 +717,14 @@ print(response)`
     'to_address': '0xabcdef...',
     'asset': 'APT',
     'amount': '50.25'
-})`
-      }
+})`,
+      },
     },
-    'tx-list': {
-      title: 'List Transactions',
-      description: 'Get all transactions for your organization',
-      method: 'GET',
-      endpoint: '/api/v1/transactions',
+    "tx-list": {
+      title: "List Transactions",
+      description: "Get all transactions for your organization",
+      method: "GET",
+      endpoint: "/api/v1/transactions",
       response: `{
   "data": [
     {
@@ -735,14 +748,14 @@ print(response)`
         curl: `curl -X GET https://api.hasa.io/api/v1/transactions \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const transactions = await hasa.transactions.list();`,
-        python: `transactions = hasa.transactions.list()`
-      }
+        python: `transactions = hasa.transactions.list()`,
+      },
     },
-    'tx-get': {
-      title: 'Get Transaction',
-      description: 'Retrieve details of a specific transaction',
-      method: 'GET',
-      endpoint: '/api/v1/transactions/:id',
+    "tx-get": {
+      title: "Get Transaction",
+      description: "Retrieve details of a specific transaction",
+      method: "GET",
+      endpoint: "/api/v1/transactions/:id",
       response: `{
   "id": "tx_xyz789",
   "type": "TRANSFER",
@@ -772,14 +785,14 @@ print(response)`
         curl: `curl -X GET https://api.hasa.io/api/v1/transactions/tx_xyz789 \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const tx = await hasa.transactions.get('tx_xyz789');`,
-        python: `tx = hasa.transactions.get('tx_xyz789')`
-      }
+        python: `tx = hasa.transactions.get('tx_xyz789')`,
+      },
     },
-    'tx-stats': {
-      title: 'Transaction Stats',
-      description: 'Get transaction statistics and summary',
-      method: 'GET',
-      endpoint: '/api/v1/transactions/stats/summary',
+    "tx-stats": {
+      title: "Transaction Stats",
+      description: "Get transaction statistics and summary",
+      method: "GET",
+      endpoint: "/api/v1/transactions/stats/summary",
       response: `{
   "totalVolume": {
     "APT": "50000.50",
@@ -795,18 +808,19 @@ print(response)`
         curl: `curl -X GET https://api.hasa.io/api/v1/transactions/stats/summary \\
   -H "x-api-key: pk_your_key"`,
         javascript: `const stats = await hasa.transactions.getStats();`,
-        python: `stats = hasa.transactions.get_stats()`
-      }
+        python: `stats = hasa.transactions.get_stats()`,
+      },
     },
   };
 
-  const filteredNavigation = navigation.map(section => ({
-    ...section,
-    items: section.items.filter(item =>
-      item.label.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  })).filter(section => section.items.length > 0);
-  
+  const filteredNavigation = navigation
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) =>
+        item.label.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
+    }))
+    .filter((section) => section.items.length > 0);
 
   const currentEndpoint = endpoints[activeEndpoint || activeSection];
 
@@ -817,7 +831,10 @@ print(response)`
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-8">
-              <a href="/" className="text-2xl font-bold bg-gradient-to-r from-[#66a3ff] to-[#007acc] bg-clip-text text-transparent">
+              <a
+                href="/"
+                className="text-2xl font-bold bg-gradient-to-r from-[#66a3ff] to-[#007acc] bg-clip-text text-transparent"
+              >
                 HASA
               </a>
               <span className="text-gray-400">API Documentation</span>
@@ -852,54 +869,57 @@ print(response)`
 
             {/* Navigation */}
             {/* Navigation */}
-<nav className="space-y-6">
-  {filteredNavigation.map((section, idx) => {
-    const isCollapsed = collapsedSections.includes(section.title);
-    
-    return (
-      <div key={idx}>
-        <button
-          onClick={() => {
-            setCollapsedSections(prev => 
-              prev.includes(section.title)
-                ? prev.filter(s => s !== section.title)
-                : [...prev, section.title]
-            );
-          }}
-          className="w-full flex items-center justify-between gap-2 text-gray-400 text-xs font-semibold uppercase mb-3 hover:text-[#66a3ff] transition-colors"
-        >
-          <div className="flex items-center gap-2">
-            {section.icon}
-            <span>{section.title}</span>
-          </div>
-          <ChevronRight className={`w-4 h-4 transition-transform ${!isCollapsed ? 'rotate-90' : ''}`} />
-        </button>
-        
-        {!isCollapsed && (
-          <ul className="space-y-1">
-            {section.items.map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => {
-                    setActiveSection(item.id);
-                    setActiveEndpoint(item.id);
-                  }}
-                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                    activeEndpoint === item.id || activeSection === item.id
-                      ? 'bg-[#007acc]/20 text-[#66a3ff]'
-                      : 'text-gray-400 hover:text-white hover:bg-gray-900'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    );
-  })}
-</nav>
+            <nav className="space-y-6">
+              {filteredNavigation.map((section, idx) => {
+                const isCollapsed = collapsedSections.includes(section.title);
+
+                return (
+                  <div key={idx}>
+                    <button
+                      onClick={() => {
+                        setCollapsedSections((prev) =>
+                          prev.includes(section.title)
+                            ? prev.filter((s) => s !== section.title)
+                            : [...prev, section.title],
+                        );
+                      }}
+                      className="w-full flex items-center justify-between gap-2 text-gray-400 text-xs font-semibold uppercase mb-3 hover:text-[#66a3ff] transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        {section.icon}
+                        <span>{section.title}</span>
+                      </div>
+                      <ChevronRight
+                        className={`w-4 h-4 transition-transform ${!isCollapsed ? "rotate-90" : ""}`}
+                      />
+                    </button>
+
+                    {!isCollapsed && (
+                      <ul className="space-y-1">
+                        {section.items.map((item) => (
+                          <li key={item.id}>
+                            <button
+                              onClick={() => {
+                                setActiveSection(item.id);
+                                setActiveEndpoint(item.id);
+                              }}
+                              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                                activeEndpoint === item.id ||
+                                activeSection === item.id
+                                  ? "bg-[#007acc]/20 text-[#66a3ff]"
+                                  : "text-gray-400 hover:text-white hover:bg-gray-900"
+                              }`}
+                            >
+                              {item.label}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                );
+              })}
+            </nav>
           </div>
         </aside>
 
@@ -911,26 +931,40 @@ print(response)`
               <div className="mb-8">
                 {currentEndpoint.method && (
                   <div className="flex items-center gap-3 mb-4">
-                    <span className={`px-3 py-1 rounded-lg font-mono text-sm font-semibold ${
-                      currentEndpoint.method === 'GET' ? 'bg-green-500/20 text-green-400' :
-                      currentEndpoint.method === 'POST' ? 'bg-blue-500/20 text-blue-400' :
-                      currentEndpoint.method === 'PATCH' ? 'bg-yellow-500/20 text-yellow-400' :
-                      currentEndpoint.method === 'PUT' ? 'bg-orange-500/20 text-orange-400' :
-                      'bg-red-500/20 text-red-400'
-                    }`}>
+                    <span
+                      className={`px-3 py-1 rounded-lg font-mono text-sm font-semibold ${
+                        currentEndpoint.method === "GET"
+                          ? "bg-green-500/20 text-green-400"
+                          : currentEndpoint.method === "POST"
+                            ? "bg-blue-500/20 text-blue-400"
+                            : currentEndpoint.method === "PATCH"
+                              ? "bg-yellow-500/20 text-yellow-400"
+                              : currentEndpoint.method === "PUT"
+                                ? "bg-orange-500/20 text-orange-400"
+                                : "bg-red-500/20 text-red-400"
+                      }`}
+                    >
                       {currentEndpoint.method}
                     </span>
-                    <code className="text-[#66a3ff] font-mono">{currentEndpoint.endpoint}</code>
+                    <code className="text-[#66a3ff] font-mono">
+                      {currentEndpoint.endpoint}
+                    </code>
                   </div>
                 )}
-                <h1 className="text-4xl font-bold mb-4">{currentEndpoint.title}</h1>
-                <p className="text-xl text-gray-400">{currentEndpoint.description}</p>
+                <h1 className="text-4xl font-bold mb-4">
+                  {currentEndpoint.title}
+                </h1>
+                <p className="text-xl text-gray-400">
+                  {currentEndpoint.description}
+                </p>
               </div>
 
               {/* Content */}
               {currentEndpoint.content && (
                 <div className="prose prose-invert max-w-none mb-8">
-                  <div className="text-gray-300 whitespace-pre-wrap">{currentEndpoint.content}</div>
+                  <div className="text-gray-300 whitespace-pre-wrap">
+                    {currentEndpoint.content}
+                  </div>
                 </div>
               )}
 
@@ -950,20 +984,24 @@ print(response)`
               {currentEndpoint.code && (
                 <div className="mb-8">
                   <h3 className="text-xl font-bold mb-4">Code Examples</h3>
-                  
+
                   {/* Tabs */}
                   <div className="flex gap-2 mb-4">
-                    {['curl', 'javascript', 'python'].map((lang) => (
+                    {["curl", "javascript", "python"].map((lang) => (
                       <button
                         key={lang}
                         onClick={() => setActiveTab(lang)}
                         className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                           activeTab === lang
-                            ? 'bg-[#007acc] text-white'
-                            : 'bg-gray-900 text-gray-400 hover:text-white'
+                            ? "bg-[#007acc] text-white"
+                            : "bg-gray-900 text-gray-400 hover:text-white"
                         }`}
                       >
-                        {lang === 'curl' ? 'cURL' : lang === 'javascript' ? 'JavaScript' : 'Python'}
+                        {lang === "curl"
+                          ? "cURL"
+                          : lang === "javascript"
+                            ? "JavaScript"
+                            : "Python"}
                       </button>
                     ))}
                   </div>
@@ -971,7 +1009,12 @@ print(response)`
                   {/* Code Block */}
                   <div className="relative bg-gray-900 border border-[#007acc]/20 rounded-lg">
                     <button
-                      onClick={() => copyToClipboard(currentEndpoint.code[activeTab], activeTab)}
+                      onClick={() =>
+                        copyToClipboard(
+                          currentEndpoint.code[activeTab],
+                          activeTab,
+                        )
+                      }
                       className="absolute top-4 right-4 p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
                     >
                       {copiedCode === activeTab ? (
@@ -993,10 +1036,12 @@ print(response)`
                   <h3 className="text-xl font-bold mb-4">Response</h3>
                   <div className="relative bg-gray-900 border border-[#007acc]/20 rounded-lg">
                     <button
-                      onClick={() => copyToClipboard(currentEndpoint.response, 'response')}
+                      onClick={() =>
+                        copyToClipboard(currentEndpoint.response, "response")
+                      }
                       className="absolute top-4 right-4 p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
                     >
-                      {copiedCode === 'response' ? (
+                      {copiedCode === "response" ? (
                         <Check className="w-4 h-4 text-green-400" />
                       ) : (
                         <Copy className="w-4 h-4 text-gray-400" />
@@ -1011,10 +1056,16 @@ print(response)`
 
               {/* Navigation Footer */}
               <div className="flex items-center justify-between pt-8 border-t border-[#007acc]/20">
-                <a href="#" className="text-[#66a3ff] hover:text-[#007acc] flex items-center gap-2">
+                <a
+                  href="#"
+                  className="text-[#66a3ff] hover:text-[#007acc] flex items-center gap-2"
+                >
                   Need help? Contact Support
                 </a>
-                <a href="#" className="text-[#66a3ff] hover:text-[#007acc] flex items-center gap-2">
+                <a
+                  href="#"
+                  className="text-[#66a3ff] hover:text-[#007acc] flex items-center gap-2"
+                >
                   Report an Issue
                   <ChevronRight className="w-4 h-4" />
                 </a>

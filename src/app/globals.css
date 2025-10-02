@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 /* Custom scrollbar for dark themes */
 ::-webkit-scrollbar {
   width: 8px;
@@ -26,6 +25,8 @@ body {
 }
 
 /* Ensure full height for app */
-html, body, #__next {
+html,
+body,
+#__next {
   height: 100%;
 }

@@ -1,6 +1,21 @@
-"use client"
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Zap, Shield, Globe, Bell, BarChart3, Check, Code, Lock, Clock, Database, Menu, X, Wallet } from 'lucide-react';
+"use client";
+import React, { useState, useEffect } from "react";
+import {
+  ArrowRight,
+  Zap,
+  Shield,
+  Globe,
+  Bell,
+  BarChart3,
+  Check,
+  Code,
+  Lock,
+  Clock,
+  Database,
+  Menu,
+  X,
+  Wallet,
+} from "lucide-react";
 
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -10,96 +25,124 @@ export default function HomePage() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const features = [
     {
       icon: <Zap className="w-6 h-6" />,
       title: "Instant Stablecoin Wallet Creation",
-      description: "Generate Aptos stablecoin wallets in milliseconds with a single API call"
+      description:
+        "Generate Aptos stablecoin wallets in milliseconds with a single API call",
     },
     {
       icon: <Shield className="w-6 h-6" />,
       title: "Enterprise Security for Stablecoins",
-      description: "HSM-backed key storage with bank-grade encryption for stablecoin assets"
+      description:
+        "HSM-backed key storage with bank-grade encryption for stablecoin assets",
     },
     {
       icon: <Globe className="w-6 h-6" />,
       title: "Multi-Stablecoin Support",
-      description: "USDC, USDT, PYUSD, and other stablecoins—all in one platform"
+      description:
+        "USDC, USDT, PYUSD, and other stablecoins—all in one platform",
     },
     {
       icon: <BarChart3 className="w-6 h-6" />,
       title: "Real-Time Stablecoin Analytics",
-      description: "Stablecoin transaction monitoring and insights at your fingertips"
+      description:
+        "Stablecoin transaction monitoring and insights at your fingertips",
     },
     {
       icon: <Bell className="w-6 h-6" />,
       title: "Smart Webhooks for Payments",
-      description: "Event-driven notifications for every stablecoin transaction"
+      description:
+        "Event-driven notifications for every stablecoin transaction",
     },
     {
       icon: <Database className="w-6 h-6" />,
       title: "Built-in Compliance for Stablecoins",
-      description: "KYC/AML workflows and monitoring for stablecoin operations"
-    }
+      description: "KYC/AML workflows and monitoring for stablecoin operations",
+    },
   ];
 
   const useCases = [
     {
       title: "Payment Platforms",
-      description: "Seamless stablecoin onboarding for cross-border payments & remittances",
-      gradient: "from-[#007acc]/20 to-[#66a3ff]/20"
+      description:
+        "Seamless stablecoin onboarding for cross-border payments & remittances",
+      gradient: "from-[#007acc]/20 to-[#66a3ff]/20",
     },
     {
       title: "Fintech Apps",
       description: "Stablecoin rails for your payment and settlement products",
-      gradient: "from-[#00509e]/20 to-[#007acc]/20"
+      gradient: "from-[#00509e]/20 to-[#007acc]/20",
     },
     {
       title: "Remittance Services",
       description: "Low-cost stablecoin transfers for global money movement",
-      gradient: "from-[#66a3ff]/20 to-[#007acc]/20"
+      gradient: "from-[#66a3ff]/20 to-[#007acc]/20",
     },
     {
       title: "E-commerce Marketplaces",
       description: "Stablecoin wallet infrastructure for buyers & sellers",
-      gradient: "from-[#003366]/20 to-[#00509e]/20"
-    }
+      gradient: "from-[#003366]/20 to-[#00509e]/20",
+    },
   ];
 
   const stats = [
     { value: "5,000+", label: "Developers" },
     { value: "250M+", label: "Stablecoin Transactions" },
     { value: "99.9%", label: "Uptime" },
-    { value: "<1s", label: "Latency" }
+    { value: "<1s", label: "Latency" },
   ];
 
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/80 backdrop-blur-lg border-b border-[#007acc]/20' : 'bg-transparent'}`}>
+      <nav
+        className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? "bg-black/80 backdrop-blur-lg border-b border-[#007acc]/20" : "bg-transparent"}`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <span className="text-2xl font-bold flex  bg-gradient-to-r from-[#66a3ff] to-[#007acc] bg-clip-text text-transparent">
-                <Wallet className='text-blue-600 mt-1 mr-1.5' /> HASA
+                <Wallet className="text-blue-600 mt-1 mr-1.5" /> HASA
               </span>
             </div>
-            
+
             <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-gray-300 hover:text-[#66a3ff] transition-colors">Features</a>
-              <a href="#use-cases" className="text-gray-300 hover:text-[#66a3ff] transition-colors">Use Cases</a>
-              <a href="/docs" className="text-gray-300 hover:text-[#66a3ff] transition-colors">Docs</a>
-              <a href="#pricing" className="text-gray-300 hover:text-[#66a3ff] transition-colors">Pricing</a>
+              <a
+                href="#features"
+                className="text-gray-300 hover:text-[#66a3ff] transition-colors"
+              >
+                Features
+              </a>
+              <a
+                href="#use-cases"
+                className="text-gray-300 hover:text-[#66a3ff] transition-colors"
+              >
+                Use Cases
+              </a>
+              <a
+                href="/docs"
+                className="text-gray-300 hover:text-[#66a3ff] transition-colors"
+              >
+                Docs
+              </a>
+              <a
+                href="#pricing"
+                className="text-gray-300 hover:text-[#66a3ff] transition-colors"
+              >
+                Pricing
+              </a>
               <button className="px-6 py-2 bg-[#007acc] hover:bg-[#00509e] rounded-lg font-medium transition-all hover:scale-105">
                 Get Started
               </button>
             </div>
 
-            <button 
+            <button
               className="md:hidden text-white"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
@@ -112,10 +155,30 @@ export default function HomePage() {
         {mobileMenuOpen && (
           <div className="md:hidden bg-black/95 backdrop-blur-lg border-t border-[#007acc]/20">
             <div className="px-4 py-6 space-y-4">
-              <a href="#features" className="block text-gray-300 hover:text-[#66a3ff]">Features</a>
-              <a href="#use-cases" className="block text-gray-300 hover:text-[#66a3ff]">Use Cases</a>
-              <a href="#docs" className="block text-gray-300 hover:text-[#66a3ff]">Docs</a>
-              <a href="#pricing" className="block text-gray-300 hover:text-[#66a3ff]">Pricing</a>
+              <a
+                href="#features"
+                className="block text-gray-300 hover:text-[#66a3ff]"
+              >
+                Features
+              </a>
+              <a
+                href="#use-cases"
+                className="block text-gray-300 hover:text-[#66a3ff]"
+              >
+                Use Cases
+              </a>
+              <a
+                href="#docs"
+                className="block text-gray-300 hover:text-[#66a3ff]"
+              >
+                Docs
+              </a>
+              <a
+                href="#pricing"
+                className="block text-gray-300 hover:text-[#66a3ff]"
+              >
+                Pricing
+              </a>
               <button className="w-full px-6 py-2 bg-[#007acc] hover:bg-[#00509e] rounded-lg font-medium">
                 Get Started
               </button>
@@ -138,16 +201,18 @@ export default function HomePage() {
               Production-ready stablecoin infrastructure in hours, not months
             </span>
           </div>
-          
+
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              Stop Building Wallets           <br />
+            Stop Building Wallets <br />
             <span className="bg-gradient-to-r from-[#66a3ff] via-[#007acc] to-[#00509e] bg-clip-text text-transparent">
-              Start Building Products 
+              Start Building Products
             </span>
           </h1>
-          
+
           <p className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
-            The fastest way to embed stablecoin wallets on Aptos into your platform. Create, manage, and scale stablecoin wallets for millions of users—without touching a private key.
+            The fastest way to embed stablecoin wallets on Aptos into your
+            platform. Create, manage, and scale stablecoin wallets for millions
+            of users—without touching a private key.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -169,7 +234,9 @@ export default function HomePage() {
             <h2 className="text-4xl font-bold mb-4">
               Building stablecoin infrastructure shouldn't slow you down
             </h2>
-            <p className="text-gray-400 text-lg">Why teams choose HASA over building in-house</p>
+            <p className="text-gray-400 text-lg">
+              Why teams choose HASA over building in-house
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -177,8 +244,13 @@ export default function HomePage() {
               <div className="w-12 h-12 bg-red-500/10 rounded-lg flex items-center justify-center mb-4">
                 <Lock className="w-6 h-6 text-red-400" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Complex Key Management for Stablecoins</h3>
-              <p className="text-gray-400">Private keys, mnemonics, recovery endless security nightmares for stablecoin operations that drain your resources</p>
+              <h3 className="text-xl font-bold mb-3">
+                Complex Key Management for Stablecoins
+              </h3>
+              <p className="text-gray-400">
+                Private keys, mnemonics, recovery endless security nightmares
+                for stablecoin operations that drain your resources
+              </p>
             </div>
 
             <div className="p-8 bg-black/50 border border-yellow-500/20 rounded-xl hover:border-yellow-500/50 transition-all">
@@ -186,15 +258,23 @@ export default function HomePage() {
                 <Clock className="w-6 h-6 text-yellow-400" />
               </div>
               <h3 className="text-xl font-bold mb-3">Months of Development</h3>
-              <p className="text-gray-400">6+ months just to launch basic stablecoin wallet features. Your competitors are already shipping</p>
+              <p className="text-gray-400">
+                6+ months just to launch basic stablecoin wallet features. Your
+                competitors are already shipping
+              </p>
             </div>
 
             <div className="p-8 bg-black/50 border border-orange-500/20 rounded-xl hover:border-orange-500/50 transition-all">
               <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center mb-4">
                 <Database className="w-6 h-6 text-orange-400" />
               </div>
-              <h3 className="text-xl font-bold mb-3">Compliance Headaches for Stablecoins</h3>
-              <p className="text-gray-400">KYC, AML, transaction monitoring navigating endless regulations for stablecoins alone</p>
+              <h3 className="text-xl font-bold mb-3">
+                Compliance Headaches for Stablecoins
+              </h3>
+              <p className="text-gray-400">
+                KYC, AML, transaction monitoring navigating endless regulations
+                for stablecoins alone
+              </p>
             </div>
           </div>
         </div>
@@ -235,13 +315,18 @@ export default function HomePage() {
       <section id="features" className="py-20 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Everything you need to scale stablecoin operations</h2>
-            <p className="text-gray-400 text-lg">Enterprise-grade features. Developer-first experience for stablecoins.</p>
+            <h2 className="text-4xl font-bold mb-4">
+              Everything you need to scale stablecoin operations
+            </h2>
+            <p className="text-gray-400 text-lg">
+              Enterprise-grade features. Developer-first experience for
+              stablecoins.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div 
+              <div
                 key={index}
                 className="group p-8 bg-gradient-to-br from-gray-900 to-black border border-[#007acc]/20 rounded-xl hover:border-[#007acc]/50 transition-all hover:scale-105"
               >
@@ -257,16 +342,24 @@ export default function HomePage() {
       </section>
 
       {/* Use Cases */}
-      <section id="use-cases" className="py-20 bg-gradient-to-b from-black to-gray-900">
+      <section
+        id="use-cases"
+        className="py-20 bg-gradient-to-b from-black to-gray-900"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Built for every type of stablecoin builder</h2>
-            <p className="text-gray-400 text-lg">From payments to remittances—power your stablecoin vision with HASA</p>
+            <h2 className="text-4xl font-bold mb-4">
+              Built for every type of stablecoin builder
+            </h2>
+            <p className="text-gray-400 text-lg">
+              From payments to remittances—power your stablecoin vision with
+              HASA
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             {useCases.map((useCase, index) => (
-              <div 
+              <div
                 key={index}
                 className={`p-10 bg-gradient-to-br ${useCase.gradient} border border-[#007acc]/30 rounded-xl hover:border-[#007acc] transition-all hover:scale-105`}
               >
@@ -295,11 +388,14 @@ export default function HomePage() {
       {/* CTA Section */}
       <section className="py-32 bg-gradient-to-br from-[#003366]/20 via-black to-[#007acc]/20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-5xl font-bold mb-6">Ready to ship stablecoin features faster?</h2>
+          <h2 className="text-5xl font-bold mb-6">
+            Ready to ship stablecoin features faster?
+          </h2>
           <p className="text-xl text-gray-400 mb-12">
-            Join the builders choosing stablecoin infrastructure over implementation.
+            Join the builders choosing stablecoin infrastructure over
+            implementation.
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button className="group px-10 py-5 bg-[#007acc] hover:bg-[#00509e] rounded-lg font-bold text-lg transition-all hover:scale-105 flex items-center gap-2">
               Get API Access
@@ -309,7 +405,7 @@ export default function HomePage() {
               Schedule Demo
             </button>
           </div>
-{/* 
+          {/* 
           <div className="mt-12 text-gray-500">
             No credit card required • Start free • Scale as you grow
           </div> */}
@@ -322,41 +418,87 @@ export default function HomePage() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="text-2xl flex font-bold bg-gradient-to-r from-[#66a3ff] to-[#007acc] bg-clip-text text-transparent mb-4">
-                <Wallet className='text-blue-600 mt-1 mr-1.5' /> HASA
+                <Wallet className="text-blue-600 mt-1 mr-1.5" /> HASA
               </div>
-              <p className="text-gray-400">Stablecoin wallet infrastructure for the Aptos economy</p>
+              <p className="text-gray-400">
+                Stablecoin wallet infrastructure for the Aptos economy
+              </p>
             </div>
-            
+
             <div>
               <h4 className="font-bold mb-4">Product</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-[#66a3ff]">Features</a></li>
-                <li><a href="#" className="hover:text-[#66a3ff]">Pricing</a></li>
-                <li><a href="#" className="hover:text-[#66a3ff]">Documentation</a></li>
-                <li><a href="#" className="hover:text-[#66a3ff]">API Reference</a></li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    Pricing
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    Documentation
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    API Reference
+                  </a>
+                </li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-bold mb-4">Company</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-[#66a3ff]">About</a></li>
-                <li><a href="#" className="hover:text-[#66a3ff]">Blog</a></li>
-                <li><a href="#" className="hover:text-[#66a3ff]">Careers</a></li>
-                <li><a href="#" className="hover:text-[#66a3ff]">Contact</a></li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    Contact
+                  </a>
+                </li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-bold mb-4">Legal</h4>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-[#66a3ff]">Privacy</a></li>
-                <li><a href="#" className="hover:text-[#66a3ff]">Terms</a></li>
-                <li><a href="#" className="hover:text-[#66a3ff]">Security</a></li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    Privacy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    Terms
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-[#66a3ff]">
+                    Security
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-[#007acc]/20 pt-8 text-center text-gray-400">
             © 2025 HASA. All rights reserved.
           </div>
