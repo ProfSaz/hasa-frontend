@@ -26,7 +26,6 @@ export default function DocsPage() {
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
     if (hash) {
-      // Map section names to first endpoint IDs
       const sectionMapping: Record<string, string> = {
         "getting-started": "introduction",
         organization: "org-profile",
@@ -34,10 +33,7 @@ export default function DocsPage() {
         wallets: "wallets-create",
         transactions: "tx-transfer",
       };
-
-      // Check if hash is a section or direct endpoint
       const targetId = sectionMapping[hash] || hash;
-
       if (endpoints[targetId]) {
         setActiveSection(targetId);
         setActiveEndpoint(targetId);
@@ -58,8 +54,6 @@ export default function DocsPage() {
       items: [
         { id: "introduction", label: "Introduction" },
         { id: "authentication", label: "Authentication" },
-        // { id: 'quick-start', label: 'Quick Start' },
-        // { id: 'environments', label: 'Environments' },
       ],
     },
     {
@@ -113,98 +107,212 @@ export default function DocsPage() {
   ];
 
   const endpoints: Record<string, any> = {
-    // Getting Started
     introduction: {
       title: "Introduction",
       description:
         "Welcome to HASA API documentation. Our API allows you to integrate Aptos wallet infrastructure into your application with ease.",
       content: `
 ## Overview
-
 HASA provides a comprehensive Wallet-as-a-Service platform built on Aptos blockchain. Our API enables you to:
-
 - Create and manage user wallets
+- Create and manage Organization treasury and payment wallets
 - Process blockchain transactions
 - Monitor balances and transaction history
-- Implement compliance workflows
 - Access real-time analytics
 
 ## Base URL
-
-**Production:** \`https://api.hasa.io\`
-**Sandbox:** \`https://sandbox-api.hasa.io\`
-
-## Rate Limits
-
-- **Standard:** 100 requests per minute
-- **Enterprise:** Custom limits available
+**Sandbox:** https://aptos-wallet-infa.onrender.com 
 
 ## Support
-
-Need help? Contact us at support@hasa.io or visit our support portal.
+Need help? Contact on X/Twitter at @prof_saz.
       `,
     },
     authentication: {
       title: "Authentication",
       description:
         "Learn how to authenticate your API requests using API keys and HMAC signatures.",
-      method: "POST",
-      endpoint: "/api/v1/*",
+      method: "",
+      endpoint: "",
       content: `
 ## API Key Authentication
+All API requests must be authenticated using your API key pair. We're still on testnet, so below you can copy already created test organizations API key pair to test using Postman or code.
 
-All API requests must be authenticated using your API key pair:
-
-- **Public Key:** \`pk_xxxxxxxxxxxxx\` (safe to expose)
-- **Secret Key:** \`sk_xxxxxxxxxxxxx\` (keep secure, never expose)
+**Test Key Pairs (Sandbox):**
+- Pair 1: Public \`pk_5fb7588df8574cc1b357bc969aaaae43\` Secret \`sk_16c43ae06ff34558ae70557b5d81872a\`
+- Pair 2: Public \`pk_3db45bb9cac949dab1fb7bc0b53943a6\` Secret \`sk_ba9b8245b2d744719a6e759d4c8f2c29\`
+- Pair 3: Public \`pk_9f8e7d6c5b4a3210987654321fedcba\` Secret \`sk_0a1b2c3d4e5f67890123456789abcdef\`
 
 ## Request Headers
-
 Every request must include:
-
 \`\`\`
 x-api-key: your_public_key
-x-api-secret: your_secret_key
 x-timestamp: 1640995200
 x-signature: hmac_signature
 \`\`\`
 
 ## HMAC Signature
-
 Generate signature using:
 \`\`\`
-HMAC-SHA256(timestamp + method + path + body, secret_key)
+HMAC-SHA256(timestamp + method + fullPath + canonicalBody)
+- **timestamp**: Unix seconds (e.g., \`Math.floor(Date.now() / 1000)\`)
+- **method**: Uppercase HTTP method (e.g., \`POST\`)
+- **fullPath**: Path + query string if present (e.g., \`/api/v1/users?page=1\`)
+- **canonicalBody**: Sorted JSON string (keys alphabetically, recursively) or empty \`{}\` if no body. For form/urlencoded, sorted params.
 \`\`\`
 
-## Example
+## Postman Setup (Recommended for Testing)
+1. Create a Postman environment and set vars: \`HMAC_PUBLIC_KEY\` (public key) and \`HMAC_SECRET_KEY\` (secret key).
+2. Paste the pre-request script below into your **Collection** (or request) Pre-request Script tab.
+3. The script auto-generates timestamp, canonical body (handles JSON/form/urlencoded with key sorting), string-to-sign, and HMAC (requires CryptoJS—install via Postman extensions if needed).
+4. Hit send, headers are set automatically!
+
+
+### Pre-request Script
+\`\`\`javascript
+// =====================
+// Postman Pre-request Script for HMAC Authentication
+// =====================
+// --- ENVIRONMENT VARIABLES ---
+// Set in Postman environment:
+// HMAC_PUBLIC_KEY
+// HMAC_SECRET_KEY
+const publicKey = pm.environment.get("HMAC_PUBLIC_KEY");
+const secretKey = pm.environment.get("HMAC_SECRET_KEY");
+if (!publicKey || !secretKey) {
+    throw new Error("Missing HMAC keys! Please set HMAC_PUBLIC_KEY and HMAC_SECRET_KEY in your Postman environment.");
+}
+// --- TIMESTAMP ---
+const timestamp = Math.floor(Date.now() / 1000).toString();
+// --- REQUEST INFO ---
+const method = pm.request.method.toUpperCase();
+const path = pm.request.url.getPath();
+const queryString = pm.request.url.getQueryString();
+const fullPath = queryString ? path + "?" + queryString : path;
+// --- HELPER: sort keys recursively ---
+function sortKeys(obj) {
+    if (Array.isArray(obj)) {
+        return obj.map(sortKeys);
+    } else if (obj && typeof obj === "object") {
+        return Object.keys(obj)
+            .sort()
+            .reduce((acc, key) => {
+                acc[key] = sortKeys(obj[key]);
+                return acc;
+            }, {});
+    }
+    return obj;
+}
+// --- CANONICALIZE BODY ---
+let canonicalBody = "";
+if (pm.request.body) {
+    if (pm.request.body.mode === "raw") {
+        const raw = pm.request.body.raw || "";
+        try {
+            const parsed = JSON.parse(raw);
+            canonicalBody = JSON.stringify(sortKeys(parsed));
+        } catch {
+            canonicalBody = raw.trim();
+        }
+    } else if (pm.request.body.mode === "urlencoded") {
+        const params = {};
+        pm.request.body.urlencoded.forEach((p) => {
+            params[p.key] = p.value;
+        });
+        canonicalBody = new URLSearchParams(sortKeys(params)).toString();
+    } else if (pm.request.body.mode === "formdata") {
+        const params = {};
+        pm.request.body.formdata.forEach((p) => {
+            params[p.key] = p.value;
+        });
+        canonicalBody = new URLSearchParams(sortKeys(params)).toString();
+    }
+}
+// --- FIX: If no body, use empty JSON object to match server ---
+if (!canonicalBody) {
+    canonicalBody = "{}";
+}
+// --- STRING TO SIGN ---
+const stringToSign = timestamp + method + fullPath + canonicalBody;
+// --- SIGNATURE ---
+const signature = CryptoJS.HmacSHA256(stringToSign, secretKey).toString(CryptoJS.enc.Hex);
+// --- DEBUG ---
+console.log("=== POSTMAN DEBUG ===");
+console.log("Timestamp:", timestamp);
+console.log("Method:", method);
+console.log("Path:", path);
+console.log("Query String:", queryString);
+console.log("Full Path:", fullPath);
+console.log("Canonical body:", canonicalBody);
+console.log("String to sign:", stringToSign);
+console.log("Signature:", signature);
+console.log("=====================");
+// --- HEADERS ---
+pm.request.headers.upsert({ key: "x-api-key", value: publicKey });
+pm.request.headers.upsert({ key: "x-timestamp", value: timestamp });
+pm.request.headers.upsert({ key: "x-signature", value: signature });
+
+\`\`\`
+
+## Example String-to-Sign Breakdown
+
+
+For \`POST /api/v1/users with body {"externalUserId": "user_abc123"}:\`
+
+\`\`\`- timestamp: "1727952000"
+- method: "POST"
+- fullPath: "/api/v1/users"
+- canonicalBody: '{"externalUserId":"user_abc123"}' (keys sorted)
+\`\`\`
+
+
+\`- stringToSign: "1727952000POST/api/v1/users{\"externalUserId\":\"user_abc123\"}"\`
+
+
+For curl/manual, generate sig separately—better to use Postman or code snippets below.
+
       `,
       code: {
-        curl: `curl -X POST https://api.hasa.io/api/v1/users \\
-  -H "x-api-key: pk_your_public_key" \\
-  -H "x-api-secret: sk_your_secret_key" \\
-  -H "x-timestamp: 1640995200" \\
-  -H "x-signature: your_hmac_signature" \\
-  -H "Content-Type: application/json"`,
+        curl: `# Note: Curl requires manual HMAC generation (use Postman for auto-handling).
+# 1. Set vars: PK=pk_f1d9f6dec8c94899802e9fd5078e543c; SK=sk_bbd5c516a60f43eab535ea7d5c59c930
+# 2. TIMESTAMP=$(date +%s)
+# 3. STRING_TO_SIGN="${"TIMESTAMP"}POST/api/v1/users{}"  # Add sorted body if present
+# 4. SIGNATURE=$(echo -n "$STRING_TO_SIGN" | openssl dgst -sha256 -hmac "$SK" -binary | xxd -p)
+curl -X POST https://sandbox-api.hasa.io/api/v1/users \\
+  -H "x-api-key: $PK" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE" \\
+  -H "Content-Type: application/json" \\
+  -d '{}'`,
         javascript: `const axios = require('axios');
 const crypto = require('crypto');
-
-const apiKey = 'pk_your_public_key';
-const apiSecret = 'sk_your_secret_key';
-const timestamp = Date.now();
-
-// Generate HMAC signature
+const apiKey = 'pk_f1d9f6dec8c94899802e9fd5078e543c';
+const apiSecret = 'sk_bbd5c516a60f43eab535ea7d5c59c930';
+const timestamp = Date.now() / 1000 | 0;
+// Helper to sort keys recursively
+function sortKeys(obj) {
+  if (Array.isArray(obj)) return obj.map(sortKeys);
+  if (obj && typeof obj === 'object') {
+    return Object.keys(obj).sort().reduce((acc, key) => {
+      acc[key] = sortKeys(obj[key]);
+      return acc;
+    }, {});
+  }
+  return obj;
+}
+const body = {};  // Your request body
+const canonicalBody = JSON.stringify(sortKeys(body)) || '{}';
+const fullPath = '/api/v1/users';  // Add ?query if needed
+const stringToSign = timestamp + 'POST' + fullPath + canonicalBody;
 const signature = crypto
   .createHmac('sha256', apiSecret)
-  .update(timestamp + 'POST' + '/api/v1/users' + JSON.stringify(body))
+  .update(stringToSign)
   .digest('hex');
-
 const response = await axios.post(
-  'https://api.hasa.io/api/v1/users',
+  'https://sandbox-api.hasa.io/api/v1/users',
   body,
   {
     headers: {
       'x-api-key': apiKey,
-      'x-api-secret': apiSecret,
       'x-timestamp': timestamp,
       'x-signature': signature
     }
@@ -214,33 +322,49 @@ const response = await axios.post(
 import hmac
 import hashlib
 import time
-
-api_key = 'pk_your_public_key'
-api_secret = 'sk_your_secret_key'
+import json
+api_key = 'pk_f1d9f6dec8c94899802e9fd5078e543c'
+api_secret = 'sk_bbd5c516a60f43eab535ea7d5c59c930'
 timestamp = str(int(time.time()))
-
-# Generate HMAC signature
-message = timestamp + 'POST' + '/api/v1/users' + json.dumps(body)
+# Helper to sort keys recursively
+def sort_keys(obj):
+    if isinstance(obj, list):
+        return [sort_keys(item) for item in obj]
+    if isinstance(obj, dict):
+        return {k: sort_keys(v) for k, v in sorted(obj.items())}
+    return obj
+body = {}  # Your request body
+canonical_body = json.dumps(sort_keys(body)) or '{}'
+full_path = '/api/v1/users'  # Add ?query if needed
+string_to_sign = timestamp + 'POST' + full_path + canonical_body
 signature = hmac.new(
     api_secret.encode(),
-    message.encode(),
+    string_to_sign.encode(),
     hashlib.sha256
 ).hexdigest()
-
 response = requests.post(
-    'https://api.hasa.io/api/v1/users',
+    'https://sandbox-api.hasa.io/api/v1/users',
     json=body,
     headers={
         'x-api-key': api_key,
-        'x-api-secret': api_secret,
         'x-timestamp': timestamp,
         'x-signature': signature
     }
 )`,
+        postman: `# Postman: Auto-handled by pre-request script!
+# 1. Set env: HMAC_PUBLIC_KEY=pk_f1d9f6dec8c94899802e9fd5078e543c, HMAC_SECRET_KEY=sk_bbd5c516a60f43eab535ea7d5c59c930
+# 2. URL: POST https://sandbox-api.hasa.io/api/v1/users
+# 3. Body (raw JSON): Paste below into Postman body tab
+{
+  # Add your request body here, e.g.:
+  "externalUserId": "user_abc123",
+  "profile": {
+    "firstName": "John",
+    "lastName": "Doe"
+  }
+}`,
       },
     },
-
-    // Organization APIs
     "org-profile": {
       title: "Get Organization Profile",
       description: "Retrieve your organization profile information",
@@ -256,13 +380,19 @@ response = requests.post(
   "createdAt": "2025-01-15T10:30:00Z"
 }`,
       code: {
-        curl: `curl -X GET https://api.hasa.io/api/v1/organization/profile \\
-  -H "x-api-key: pk_your_key" \\
-  -H "x-api-secret: sk_your_secret"`,
+        curl: `# Note: Generate HMAC sig manually or use Postman.
+# STRING_TO_SIGN="${"TIMESTAMP"}GET/api/v1/organization/profile{}"
+curl -X GET https://sandbox-api.hasa.io/api/v1/organization/profile \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const response = await hasa.organization.getProfile();
 console.log(response.data);`,
         python: `response = hasa.organization.get_profile()
 print(response)`,
+        postman: `# Postman: No body needed—script handles headers.
+# URL: GET https://aptos-wallet-infa.onrender.com/api/v1/organization/profile
+# (Leave body empty)`,
       },
     },
     "org-settings": {
@@ -280,9 +410,12 @@ print(response)`,
   "message": "Settings updated successfully"
 }`,
       code: {
-        curl: `curl -X PATCH https://api.hasa.io/api/v1/organization/settings \\
+        curl: `# Note: Use Postman for sig. Body: sorted JSON.
+curl -X PATCH https://sandbox-api.hasa.io/api/v1/organization/settings \\
   -H "Content-Type: application/json" \\
-  -H "x-api-key: pk_your_key" \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE" \\
   -d '{
     "webhookUrl": "https://yourapp.com/webhooks",
     "autoConversion": true
@@ -295,6 +428,12 @@ print(response)`,
     'webhook_url': 'https://yourapp.com/webhooks',
     'auto_conversion': True
 })`,
+        postman: `# Postman: Paste this into raw JSON body.
+{
+  "webhookUrl": "https://yourapp.com/webhooks",
+  "autoConversion": true,
+  "allowedAssets": ["APT", "USDC"]
+}`,
       },
     },
     "org-limits": {
@@ -318,10 +457,15 @@ print(response)`,
   }
 }`,
       code: {
-        curl: `curl -X GET https://api.hasa.io/api/v1/organization/limits \\
-  -H "x-api-key: pk_your_key"`,
+        curl: `# Use Postman for easy sig gen.
+curl -X GET https://sandbox-api.hasa.io/api/v1/organization/limits \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const limits = await hasa.organization.getLimits();`,
         python: `limits = hasa.organization.get_limits()`,
+        postman: `# Postman: No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/organization/limits`,
       },
     },
     "org-api-keys": {
@@ -336,14 +480,37 @@ print(response)`,
   "lastKeyRotation": "2025-08-15T10:00:00Z"
 }`,
       code: {
-        curl: `curl -X GET https://api.hasa.io/api/v1/organization/api-keys \\
-  -H "x-api-key: pk_your_key"`,
+        curl: `# Sig via Postman recommended.
+curl -X GET https://sandbox-api.hasa.io/api/v1/organization/api-keys \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const keys = await hasa.organization.getApiKeys();`,
         python: `keys = hasa.organization.get_api_keys()`,
+        postman: `# Postman: No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/organization/api-keys`,
       },
     },
-
-    // Users APIs
+    "org-metrics": {
+      title: "Get Metrics",
+      description: "Retrieve organization metrics and analytics",
+      method: "GET",
+      endpoint: "/api/v1/organization/metrics",
+      response: `{ "totalUsers": 3542, "totalVolume": "50000 APT" }`,
+      code: {
+        curl: `# TODO: Full example incoming.
+curl -X GET https://sandbox-api.hasa.io/api/v1/organization/metrics \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
+        javascript: `// TODO
+const metrics = await hasa.organization.getMetrics();`,
+        python: `// TODO
+metrics = hasa.organization.get_metrics()`,
+        postman: `# Postman: No body yet.
+# URL: GET https://sandbox-api.hasa.io/api/v1/organization/metrics`,
+      },
+    },
     "users-create": {
       title: "Create User",
       description: "Create a new user in your organization",
@@ -372,9 +539,12 @@ print(response)`,
   "createdAt": "2025-09-30T02:00:00Z"
 }`,
       code: {
-        curl: `curl -X POST https://api.hasa.io/api/v1/users \\
+        curl: `# Postman handles sig + body sorting.
+curl -X POST https://sandbox-api.hasa.io/api/v1/users \\
   -H "Content-Type: application/json" \\
-  -H "x-api-key: pk_your_key" \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE" \\
   -d '{
     "externalUserId": "user_abc123",
     "profile": {
@@ -399,6 +569,17 @@ print(response)`,
         'email': 'john.doe@example.com'
     }
 })`,
+        postman: `# Postman: Paste into raw JSON body.
+{
+  "externalUserId": "user_abc123",
+  "profile": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "+1234567890",
+    "country": "US"
+  }
+}`,
       },
     },
     "users-list": {
@@ -428,10 +609,14 @@ print(response)`,
   }
 }`,
       code: {
-        curl: `curl -X GET "https://api.hasa.io/api/v1/users?page=1&limit=20" \\
-  -H "x-api-key: pk_your_key"`,
+        curl: `# Query in path; sig via Postman.
+curl -X GET "https://sandbox-api.hasa.io/api/v1/users?page=1&limit=20" \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const users = await hasa.users.list({ page: 1, limit: 20 });`,
         python: `users = hasa.users.list(page=1, limit=20)`,
+        postman: `# Postman: Add ?page=1&limit=20 to URL. No body.`,
       },
     },
     "users-get": {
@@ -457,10 +642,96 @@ print(response)`,
   "lastActive": "2025-09-30T10:30:00Z"
 }`,
       code: {
-        curl: `curl -X GET https://api.hasa.io/api/v1/users/usr_9876543210 \\
-  -H "x-api-key: pk_your_key"`,
+        curl: `curl -X GET https://sandbox-api.hasa.io/api/v1/users/usr_9876543210 \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const user = await hasa.users.get('usr_9876543210');`,
         python: `user = hasa.users.get('usr_9876543210')`,
+        postman: `# Postman: Replace :userId in URL. No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/users/usr_9876543210`,
+      },
+    },
+    "users-update": {
+      title: "Update User",
+      description: "Update user details",
+      method: "PATCH",
+      endpoint: "/api/v1/users/:userId",
+      request: `{
+  "profile": {
+    "firstName": "Jane",
+    "email": "jane.doe@example.com"
+  }
+}`,
+      response: `{ "success": true, "updatedAt": "2025-09-30T03:00:00Z" }`,
+      code: {
+        curl: `# Stub—full coming soon. Use Postman pattern.
+curl -X PATCH https://sandbox-api.hasa.io/api/v1/users/usr_9876543210 \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE" \\
+  -d '{
+    "profile": {
+      "firstName": "Jane"
+    }
+  }'`,
+        javascript: `// Stub
+const updated = await hasa.users.update('usr_9876543210', {
+  profile: { firstName: 'Jane' }
+});`,
+        python: `// Stub
+updated = hasa.users.update('usr_9876543210', {
+    'profile': {'first_name': 'Jane'}
+})`,
+        postman: `# Postman: Add body as needed.
+{
+  "profile": {
+    "firstName": "Jane",
+    "email": "jane.doe@example.com"
+  }
+}`,
+      },
+    },
+    "users-delete": {
+      title: "Delete User",
+      description: "Delete a user from your organization",
+      method: "DELETE",
+      endpoint: "/api/v1/users/:userId",
+      response: `{ "success": true }`,
+      code: {
+        curl: `# Use Postman for sig.
+curl -X DELETE https://sandbox-api.hasa.io/api/v1/users/usr_9876543210 \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
+        javascript: `// Stub
+await hasa.users.delete('usr_9876543210');`,
+        python: `// Stub
+hasa.users.delete('usr_9876543210')`,
+        postman: `# Postman: No body.
+# URL: DELETE https://sandbox-api.hasa.io/api/v1/users/usr_9876543210`,
+      },
+    },
+    "users-freeze": {
+      title: "Freeze/Unfreeze User",
+      description: "Freeze or unfreeze a user account",
+      method: "PATCH",
+      endpoint: "/api/v1/users/:userId/freeze",
+      request: `{ "freeze": true }`,
+      response: `{ "success": true }`,
+      code: {
+        curl: `# Stub.
+curl -X PATCH https://sandbox-api.hasa.io/api/v1/users/usr_9876543210/freeze \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE" \\
+  -d '{"freeze": true}'`,
+        javascript: `// Stub
+await hasa.users.freeze('usr_9876543210', true);`,
+        python: `// Stub
+hasa.users.freeze('usr_9876543210', True)`,
+        postman: `# Postman: Body.
+{ "freeze": true }`,
       },
     },
     "users-wallet": {
@@ -489,14 +760,16 @@ print(response)`,
   "status": "ACTIVE"
 }`,
       code: {
-        curl: `curl -X GET https://api.hasa.io/api/v1/users/usr_9876543210/wallet \\
-  -H "x-api-key: pk_your_key"`,
+        curl: `curl -X GET https://sandbox-api.hasa.io/api/v1/users/usr_9876543210/wallet \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const wallet = await hasa.users.getWallet('usr_9876543210');`,
         python: `wallet = hasa.users.get_wallet('usr_9876543210')`,
+        postman: `# Postman: Replace :userId. No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/users/usr_9876543210/wallet`,
       },
     },
-
-    // Wallets APIs
     "wallets-create": {
       title: "Create Wallet",
       description: "Create a new wallet for your organization or a user",
@@ -517,9 +790,11 @@ print(response)`,
   "createdAt": "2025-09-30T02:00:00Z"
 }`,
       code: {
-        curl: `curl -X POST https://api.hasa.io/api/v1/wallets \\
+        curl: `curl -X POST https://sandbox-api.hasa.io/api/v1/wallets \\
   -H "Content-Type: application/json" \\
-  -H "x-api-key: pk_your_key" \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE" \\
   -d '{
     "type": "USER",
     "userId": "usr_9876543210",
@@ -535,6 +810,12 @@ print(response)`,
     'user_id': 'usr_9876543210',
     'label': 'Main Wallet'
 })`,
+        postman: `# Postman: Paste into body.
+{
+  "type": "USER",
+  "userId": "usr_9876543210",
+  "label": "Main Wallet"
+}`,
       },
     },
     "wallets-list": {
@@ -564,10 +845,15 @@ print(response)`,
   }
 }`,
       code: {
-        curl: `curl -X GET https://api.hasa.io/api/v1/wallets \\
-  -H "x-api-key: pk_your_key"`,
+        curl: `# Use Postman for sig.
+curl -X GET https://sandbox-api.hasa.io/api/v1/wallets \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const wallets = await hasa.wallets.list();`,
         python: `wallets = hasa.wallets.list()`,
+        postman: `# Postman: No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/wallets`,
       },
     },
     "wallets-get": {
@@ -592,10 +878,63 @@ print(response)`,
   "createdAt": "2025-09-30T02:00:00Z"
 }`,
       code: {
-        curl: `curl -X GET https://api.hasa.io/api/v1/wallets/wlt_abc123 \\
-  -H "x-api-key: pk_your_key"`,
+        curl: `curl -X GET https://sandbox-api.hasa.io/api/v1/wallets/wlt_abc123 \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const wallet = await hasa.wallets.get('wlt_abc123');`,
         python: `wallet = hasa.wallets.get('wlt_abc123')`,
+        postman: `# Postman: Replace :id. No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/wallets/wlt_abc123`,
+      },
+    },
+    "wallets-user": {
+      title: "Get User Wallets",
+      description: "Retrieve all wallets for a specific user",
+      method: "GET",
+      endpoint: "/api/v1/wallets/user/:userId",
+      response: `{ "wallets": ["wlt_abc123", "wlt_def456"] }`,
+      code: {
+        curl: `# Stub.
+curl -X GET https://sandbox-api.hasa.io/api/v1/wallets/user/usr_9876543210 \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
+        javascript: `// Stub
+const userWallets = await hasa.wallets.getByUser('usr_9876543210');`,
+        python: `// Stub
+user_wallets = hasa.wallets.get_by_user('usr_9876543210')`,
+        postman: `# Postman: Replace :userId. No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/wallets/user/usr_9876543210`,
+      },
+    },
+    "wallets-sync": {
+      title: "Sync Wallet Balance",
+      description: "Synchronize wallet balance with blockchain",
+      method: "POST",
+      endpoint: "/api/v1/wallets/:id/sync",
+      response: `{
+  "success": true,
+  "wallet": {
+    "id": "wlt_abc123",
+    "assets": [
+      {
+        "symbol": "APT",
+        "balance": "1050.75",
+        "lastUpdated": "2025-09-30T10:35:00Z"
+      }
+    ]
+  }
+}`,
+      code: {
+        curl: `curl -X POST https://sandbox-api.hasa.io/api/v1/wallets/wlt_abc123/sync \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
+        javascript: `const result = await hasa.wallets.sync('wlt_abc123');`,
+        python: `result = hasa.wallets.sync('wlt_abc123')`,
+        postman: `# Postman: No body.
+# URL: POST https://sandbox-api.hasa.io/api/v1/wallets/wlt_abc123/sync`,
       },
     },
     "wallets-transfer": {
@@ -621,9 +960,11 @@ print(response)`,
   "createdAt": "2025-09-30T10:30:00Z"
 }`,
       code: {
-        curl: `curl -X POST https://api.hasa.io/api/v1/wallets/transfer \\
+        curl: `curl -X POST https://sandbox-api.hasa.io/api/v1/wallets/transfer \\
   -H "Content-Type: application/json" \\
-  -H "x-api-key: pk_your_key" \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE" \\
   -d '{
     "fromWalletId": "wlt_abc123",
     "toAddress": "0xabcdef1234567890...",
@@ -642,35 +983,38 @@ print(response)`,
     'asset': 'APT',
     'amount': '100.50'
 })`,
-      },
-    },
-    "wallets-sync": {
-      title: "Sync Wallet Balance",
-      description: "Synchronize wallet balance with blockchain",
-      method: "POST",
-      endpoint: "/api/v1/wallets/:id/sync",
-      response: `{
-  "success": true,
-  "wallet": {
-    "id": "wlt_abc123",
-    "assets": [
-      {
-        "symbol": "APT",
-        "balance": "1050.75",
-        "lastUpdated": "2025-09-30T10:35:00Z"
-      }
-    ]
-  }
+        postman: `# Postman: Body JSON.
+{
+  "fromWalletId": "wlt_abc123",
+  "toAddress": "0xabcdef1234567890...",
+  "asset": "APT",
+  "amount": "100.50",
+  "description": "Payment for services"
 }`,
-      code: {
-        curl: `curl -X POST https://api.hasa.io/api/v1/wallets/wlt_abc123/sync \\
-  -H "x-api-key: pk_your_key"`,
-        javascript: `const result = await hasa.wallets.sync('wlt_abc123');`,
-        python: `result = hasa.wallets.sync('wlt_abc123')`,
       },
     },
-
-    // Transactions APIs
+    "wallets-status": {
+      title: "Update Status",
+      description: "Update wallet status (e.g., freeze)",
+      method: "PATCH",
+      endpoint: "/api/v1/wallets/:id/status",
+      request: `{ "status": "FROZEN" }`,
+      response: `{ "success": true }`,
+      code: {
+        curl: `# Stub.
+curl -X PATCH https://sandbox-api.hasa.io/api/v1/wallets/wlt_abc123/status \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE" \\
+  -d '{"status": "FROZEN"}'`,
+        javascript: `// Stub
+await hasa.wallets.updateStatus('wlt_abc123', 'FROZEN');`,
+        python: `// Stub
+hasa.wallets.update_status('wlt_abc123', 'FROZEN')`,
+        postman: `# Postman: Body.
+{ "status": "FROZEN" }`,
+      },
+    },
     "tx-transfer": {
       title: "Process Transfer",
       description: "Create and process a blockchain transfer",
@@ -697,9 +1041,11 @@ print(response)`,
   "createdAt": "2025-09-30T10:30:00Z"
 }`,
       code: {
-        curl: `curl -X POST https://api.hasa.io/api/v1/transactions/process-transfer \\
+        curl: `curl -X POST https://sandbox-api.hasa.io/api/v1/transactions/process-transfer \\
   -H "Content-Type: application/json" \\
-  -H "x-api-key: pk_your_key" \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE" \\
   -d '{
     "fromWalletId": "wlt_abc123",
     "toAddress": "0xabcdef...",
@@ -718,6 +1064,14 @@ print(response)`,
     'asset': 'APT',
     'amount': '50.25'
 })`,
+        postman: `# Postman: Body JSON.
+{
+  "fromWalletId": "wlt_abc123",
+  "toAddress": "0xabcdef1234567890...",
+  "asset": "APT",
+  "amount": "50.25",
+  "externalReference": "order_12345"
+}`,
       },
     },
     "tx-list": {
@@ -745,10 +1099,14 @@ print(response)`,
   }
 }`,
       code: {
-        curl: `curl -X GET https://api.hasa.io/api/v1/transactions \\
-  -H "x-api-key: pk_your_key"`,
+        curl: `curl -X GET https://sandbox-api.hasa.io/api/v1/transactions \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const transactions = await hasa.transactions.list();`,
         python: `transactions = hasa.transactions.list()`,
+        postman: `# Postman: No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/transactions`,
       },
     },
     "tx-get": {
@@ -782,10 +1140,34 @@ print(response)`,
   "confirmedAt": "2025-09-30T10:31:00Z"
 }`,
       code: {
-        curl: `curl -X GET https://api.hasa.io/api/v1/transactions/tx_xyz789 \\
-  -H "x-api-key: pk_your_key"`,
+        curl: `curl -X GET https://sandbox-api.hasa.io/api/v1/transactions/tx_xyz789 \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const tx = await hasa.transactions.get('tx_xyz789');`,
         python: `tx = hasa.transactions.get('tx_xyz789')`,
+        postman: `# Postman: Replace :id. No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/transactions/tx_xyz789`,
+      },
+    },
+    "tx-wallet": {
+      title: "Wallet Transactions",
+      description: "Get transactions for a specific wallet",
+      method: "GET",
+      endpoint: "/api/v1/transactions/wallet/:walletId",
+      response: `{ "data": [] }`,
+      code: {
+        curl: `# Stub.
+curl -X GET https://sandbox-api.hasa.io/api/v1/transactions/wallet/wlt_abc123 \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
+        javascript: `// Stub
+const walletTxs = await hasa.transactions.getByWallet('wlt_abc123');`,
+        python: `// Stub
+wallet_txs = hasa.transactions.get_by_wallet('wlt_abc123')`,
+        postman: `# Postman: Replace :walletId. No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/transactions/wallet/wlt_abc123`,
       },
     },
     "tx-stats": {
@@ -805,10 +1187,14 @@ print(response)`,
   "failed": 12
 }`,
       code: {
-        curl: `curl -X GET https://api.hasa.io/api/v1/transactions/stats/summary \\
-  -H "x-api-key: pk_your_key"`,
+        curl: `curl -X GET https://sandbox-api.hasa.io/api/v1/transactions/stats/summary \\
+  -H "x-api-key: pk_f1d9f6dec8c94899802e9fd5078e543c" \\
+  -H "x-timestamp: $TIMESTAMP" \\
+  -H "x-signature: $SIGNATURE"`,
         javascript: `const stats = await hasa.transactions.getStats();`,
         python: `stats = hasa.transactions.get_stats()`,
+        postman: `# Postman: No body.
+# URL: GET https://sandbox-api.hasa.io/api/v1/transactions/stats/summary`,
       },
     },
   };
@@ -824,9 +1210,86 @@ print(response)`,
 
   const currentEndpoint = endpoints[activeEndpoint || activeSection];
 
+ const renderContent = () => {
+  if (!currentEndpoint.content || typeof currentEndpoint.content !== 'string') return null;
+  const lines = currentEndpoint.content.split('\n');
+  const elements: React.ReactNode[] = [];
+  let idx = 0;
+  while (idx < lines.length) {
+    let line = lines[idx];
+    if (line.startsWith('## ')) {
+      elements.push(<h2 key={elements.length} className="text-2xl font-bold text-white mt-8 mb-4">{line.replace('## ', '')}</h2>);
+      idx++;
+    } else if (line.startsWith('### ')) {
+      elements.push(<h3 key={elements.length} className="text-xl font-semibold text-white mt-6 mb-3">{line.replace('### ', '')}</h3>);
+      idx++;
+    } else if (line.startsWith('```')) {
+      const langMatch = line.match(/```(\w+)?/);
+      const lang = langMatch ? langMatch[1] : '';
+      const codeLines: string[] = [];
+      idx++; // skip opening ```
+      while (idx < lines.length && !lines[idx].startsWith('```')) {
+        codeLines.push(lines[idx]);
+        idx++;
+      }
+      if (idx < lines.length) idx++; // skip closing ```
+      elements.push(
+        <pre key={elements.length} className="bg-gray-900 border border-[#007acc]/20 rounded-lg p-4 mt-4 overflow-x-auto">
+          <code className={`text-sm block ${lang === 'javascript' ? 'text-[#66a3ff]' : 'text-gray-300'}`}>
+            {codeLines.join('\n')}
+          </code>
+        </pre>
+      );
+    } else if (line.startsWith('- ')) {
+      const content = line.replace('- ', '');
+      let bulletContent = content;
+      if (content.includes('`')) {
+        const parts = content.split('`');
+        bulletContent = parts.map((part: string, j: number) =>
+          j % 2 === 1 ? (
+            <code key={j} className="px-2 py-1 bg-gray-900 border border-[#007acc]/20 rounded text-[#66a3ff] text-sm font-mono">
+              {part}
+            </code>
+          ) : (
+            part
+          )
+        );
+      }
+      elements.push(<li key={elements.length} className="text-gray-300 leading-relaxed">{bulletContent}</li>);
+      idx++;
+    } else if (line.includes('**')) {
+      const parts = line.split('**');
+      const boldContent = parts.map((part: string, j: number) =>
+        j % 2 === 1 ? <strong key={j} className="text-white font-semibold">{part}</strong> : part
+      );
+      elements.push(<p key={elements.length} className="text-gray-300 leading-relaxed">{boldContent}</p>);
+      idx++;
+    } else if (line.includes('`')) {
+      const parts = line.split('`');
+      const inlineContent = parts.map((part: string, j: number) =>
+        j % 2 === 1 ? (
+          <code key={j} className="px-2 py-1 bg-gray-900 border border-[#007acc]/20 rounded text-[#66a3ff] text-sm font-mono">
+            {part}
+          </code>
+        ) : (
+          part
+        )
+      );
+      elements.push(<p key={elements.length} className="text-gray-300 leading-relaxed">{inlineContent}</p>);
+      idx++;
+    } else if (line.trim() === '') {
+      elements.push(<div key={elements.length} className="h-2" />);
+      idx++;
+    } else {
+      elements.push(<p key={elements.length} className="text-gray-300 leading-relaxed">{line}</p>);
+      idx++;
+    }
+  }
+  return elements;
+};
+
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header */}
       <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-lg border-b border-[#007acc]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -850,12 +1313,9 @@ print(response)`,
           </div>
         </div>
       </header>
-
       <div className="flex max-w-7xl mx-auto">
-        {/* Sidebar */}
         <aside className="w-64 h-[calc(100vh-4rem)] sticky top-16 border-r border-[#007acc]/20 overflow-y-auto">
           <div className="p-4">
-            {/* Search */}
             <div className="relative mb-6">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500" />
               <input
@@ -866,13 +1326,9 @@ print(response)`,
                 className="w-full pl-10 pr-4 py-2 bg-gray-900 border border-[#007acc]/20 rounded-lg text-sm focus:outline-none focus:border-[#007acc]/50"
               />
             </div>
-
-            {/* Navigation */}
-            {/* Navigation */}
             <nav className="space-y-6">
               {filteredNavigation.map((section, idx) => {
                 const isCollapsed = collapsedSections.includes(section.title);
-
                 return (
                   <div key={idx}>
                     <button
@@ -893,7 +1349,6 @@ print(response)`,
                         className={`w-4 h-4 transition-transform ${!isCollapsed ? "rotate-90" : ""}`}
                       />
                     </button>
-
                     {!isCollapsed && (
                       <ul className="space-y-1">
                         {section.items.map((item) => (
@@ -902,6 +1357,9 @@ print(response)`,
                               onClick={() => {
                                 setActiveSection(item.id);
                                 setActiveEndpoint(item.id);
+                                const url = new URL(window.location.href);
+                                url.hash = item.id;
+                                window.history.replaceState(null, '', url);
                               }}
                               className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
                                 activeEndpoint === item.id ||
@@ -922,12 +1380,9 @@ print(response)`,
             </nav>
           </div>
         </aside>
-
-        {/* Main Content */}
         <main className="flex-1 p-8">
-          {currentEndpoint && (
+          {currentEndpoint ? (
             <div className="max-w-4xl">
-              {/* Endpoint Header */}
               <div className="mb-8">
                 {currentEndpoint.method && (
                   <div className="flex items-center gap-3 mb-4">
@@ -941,35 +1396,26 @@ print(response)`,
                               ? "bg-yellow-500/20 text-yellow-400"
                               : currentEndpoint.method === "PUT"
                                 ? "bg-orange-500/20 text-orange-400"
-                                : "bg-red-500/20 text-red-400"
+                                : currentEndpoint.method === "DELETE"
+                                  ? "bg-red-500/20 text-red-400"
+                                  : "bg-gray-500/20 text-gray-400"
                       }`}
                     >
                       {currentEndpoint.method}
                     </span>
                     <code className="text-[#66a3ff] font-mono">
-                      {currentEndpoint.endpoint}
+                      {currentEndpoint.endpoint
+                        .replace(':userId', 'usr_9876543210')
+                        .replace(':id', 'wlt_abc123')
+                        .replace(':walletId', 'wlt_abc123')}
                     </code>
                   </div>
                 )}
-                <h1 className="text-4xl font-bold mb-4">
-                  {currentEndpoint.title}
-                </h1>
-                <p className="text-xl text-gray-400">
-                  {currentEndpoint.description}
-                </p>
+                <h1 className="text-4xl font-bold mb-4">{currentEndpoint.title}</h1>
+                <p className="text-xl text-gray-400">{currentEndpoint.description}</p>
               </div>
-
-              {/* Content */}
-              {currentEndpoint.content && (
-                <div className="prose prose-invert max-w-none mb-8">
-                  <div className="text-gray-300 whitespace-pre-wrap">
-                    {currentEndpoint.content}
-                  </div>
-                </div>
-              )}
-
-              {/* Request Body */}
-              {currentEndpoint.request && (
+              {renderContent()}
+              {currentEndpoint.request && !currentEndpoint.code?.postman && (
                 <div className="mb-8">
                   <h3 className="text-xl font-bold mb-4">Request Body</h3>
                   <div className="bg-gray-900 border border-[#007acc]/20 rounded-lg p-4">
@@ -979,18 +1425,19 @@ print(response)`,
                   </div>
                 </div>
               )}
-
-              {/* Code Examples */}
               {currentEndpoint.code && (
                 <div className="mb-8">
                   <h3 className="text-xl font-bold mb-4">Code Examples</h3>
-
-                  {/* Tabs */}
-                  <div className="flex gap-2 mb-4">
-                    {["curl", "javascript", "python"].map((lang) => (
+                  <div className="flex gap-2 mb-4 flex-wrap">
+                    {["curl", "postman", "javascript", "python"].map((lang) => (
                       <button
                         key={lang}
-                        onClick={() => setActiveTab(lang)}
+                        onClick={() => {
+                          setActiveTab(lang);
+                          const url = new URL(window.location.href);
+                          url.searchParams.set('tab', lang);
+                          window.history.replaceState(null, '', url);
+                        }}
                         className={`px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                           activeTab === lang
                             ? "bg-[#007acc] text-white"
@@ -999,14 +1446,14 @@ print(response)`,
                       >
                         {lang === "curl"
                           ? "cURL"
-                          : lang === "javascript"
-                            ? "JavaScript"
-                            : "Python"}
+                          : lang === "postman"
+                            ? "Postman"
+                            : lang === "javascript"
+                              ? "JavaScript"
+                              : "Python"}
                       </button>
                     ))}
                   </div>
-
-                  {/* Code Block */}
                   <div className="relative bg-gray-900 border border-[#007acc]/20 rounded-lg">
                     <button
                       onClick={() =>
@@ -1029,8 +1476,6 @@ print(response)`,
                   </div>
                 </div>
               )}
-
-              {/* Response */}
               {currentEndpoint.response && (
                 <div className="mb-8">
                   <h3 className="text-xl font-bold mb-4">Response</h3>
@@ -1053,24 +1498,18 @@ print(response)`,
                   </div>
                 </div>
               )}
-
-              {/* Navigation Footer */}
               <div className="flex items-center justify-between pt-8 border-t border-[#007acc]/20">
-                <a
-                  href="#"
-                  className="text-[#66a3ff] hover:text-[#007acc] flex items-center gap-2"
-                >
+                <a href="#" className="text-[#66a3ff] hover:text-[#007acc] flex items-center gap-2">
                   Need help? Contact Support
                 </a>
-                <a
-                  href="#"
-                  className="text-[#66a3ff] hover:text-[#007acc] flex items-center gap-2"
-                >
+                <a href="#" className="text-[#66a3ff] hover:text-[#007acc] flex items-center gap-2">
                   Report an Issue
                   <ChevronRight className="w-4 h-4" />
                 </a>
               </div>
             </div>
+          ) : (
+            <div className="text-gray-400 text-center py-12">Endpoint not found—check the sidebar!</div>
           )}
         </main>
       </div>
