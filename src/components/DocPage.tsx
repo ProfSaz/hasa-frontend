@@ -1456,7 +1456,7 @@ hasa.wallets.update_status('wlt_abc123', 'FROZEN')`,
       },
     },
     "tx-org-transfer": {
-      title: "Get Organizaion Transfers",
+      title: "Get Organization Transfers",
       description: "Get all Organizaiton owned wallet transactions",
       method: "GET",
       endpoint: "/api/v1/transactions/?page=1&limit=3",

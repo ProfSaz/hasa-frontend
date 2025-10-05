@@ -50,7 +50,7 @@ export default function DocsLandingPage() {
       ],
     },
     {
-      id: "wallets",
+      id: "org-wallet",
       title: "Wallets API",
       description: "Handle wallet creation, balance sync, and fund transfers",
       icon: <Wallet className="w-8 h-8" />,
@@ -60,17 +60,17 @@ export default function DocsLandingPage() {
         "List Wallets",
         "Get Wallet",
         "Sync Balance",
-        "Transfer Funds",
+        "Get Wallet Balance"
       ],
     },
     {
-      id: "transactions",
+      id: "tx-org-transfer",
       title: "Transactions API",
       description: "Process transfers and monitor transaction history",
       icon: <ArrowLeftRight className="w-8 h-8" />,
       color: "from-red-500 to-rose-500",
       topics: [
-        "Process Transfer",
+        "Get Org Transactions",
         "List Transactions",
         "Get Transaction",
         "Transaction Stats",
