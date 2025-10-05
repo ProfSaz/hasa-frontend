@@ -20,7 +20,7 @@ export default function DocsLandingPage() {
         "Learn the basics of HASA API, authentication, and quick start guide",
       icon: <Book className="w-8 h-8" />,
       color: "from-blue-500 to-cyan-500",
-      topics: ["Introduction", "Authentication", "Quick Start", "Environments"],
+      topics: ["Introduction", "Authentication"],
     },
     {
       id: "organization",
