@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   ArrowRight,
   Zap,
@@ -127,16 +128,16 @@ export default function HomePage() {
           <p className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
             The fastest way to embed stablecoin wallets on Aptos into your
             platform. Create, manage, and scale stablecoin wallets for millions
-            of users—without touching a private key.
+            of users without worrying about a private key.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button className="group px-8 py-4 bg-[#007acc] hover:bg-[#00509e] rounded-lg font-semibold text-lg transition-all hover:scale-105 flex items-center gap-2">
-              Start Building
+              <Link href="/docs">Start Building</Link>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <button className="px-8 py-4 bg-transparent border-2 border-[#007acc]/50 hover:border-[#007acc] rounded-lg font-semibold text-lg transition-all hover:scale-105">
-              View Documentation
+            <Link href="/docs/reference#getting-started"> View Documentation</Link>
             </button>
           </div>
         </div>
