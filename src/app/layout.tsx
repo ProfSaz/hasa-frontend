@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, PT_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import Footer from "@/components/Nav/Footer";
-import Header from "@/components/Nav/Header";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "HASA WaaS Platform Admin",
@@ -17,11 +15,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} bg-gray-900 text-gray-100`}>
-        <Header />
-        <main className="min-h-screen pt-16">{children}</main>
-        <Footer />
+    <html lang="en">
+      <body className={`${inter.className}`}>
+        <main className="bg-black/80">{children}</main>
       </body>
     </html>
   );

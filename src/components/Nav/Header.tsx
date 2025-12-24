@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, Wallet } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -16,6 +17,34 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [mobileMenuOpen]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const nav = document.querySelector("nav");
+      if (mobileMenuOpen && nav && !nav.contains(event.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
 
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -42,96 +71,86 @@ export default function Header() {
   };
 
   return (
-    <nav
-      className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-black/80 backdrop-blur-lg border-b border-[#007acc]/20"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed w-full z-50 duration-300 bg-[#12121280] backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <a
-              href="/"
-              className="text-2xl font-bold flex bg-gradient-to-r from-[#66a3ff] to-[#007acc] bg-clip-text text-transparent"
-            >
-              <Wallet className="text-blue-600 mt-1 mr-1.5" /> HASA
-            </a>
-          </div>
+          <Link
+            href="/"
+            className="text-[18px] font-semibold flex items-center text-white"
+          >
+            <div className="w-8 h-8 rounded-lg bg-[#007acc70] flex items-center justify-center mr-2">
+              <Wallet className="text-white w-5 h-5" />
+            </div>
+            HASA
+          </Link>
 
-          <div className="hidden md:flex items-center space-x-8">
-            <a
+          <div className="hidden md:flex items-center space-x-3">
+            <Link
               href="/#features"
               onClick={(e) => handleNavClick(e, "features")}
-              className="text-gray-300 hover:text-[#66a3ff] transition-colors"
+              className="text-gray-300 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-white/5"
             >
               Features
-            </a>
-            <a
+            </Link>
+            <Link
               href="/#use-cases"
               onClick={(e) => handleNavClick(e, "use-cases")}
-              className="text-gray-300 hover:text-[#66a3ff] transition-colors"
+              className="text-gray-300 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-white/5"
             >
               Use Cases
-            </a>
-            <a
+            </Link>
+            <Link
               href="/docs"
-              className="text-gray-300 hover:text-[#66a3ff] transition-colors"
+              className="text-gray-300 hover:text-white transition-colors px-4 py-2 rounded-lg hover:bg-white/5"
             >
-              Docs
-            </a>
-            <button className="px-6 py-2 bg-[#007acc] hover:bg-[#00509e] rounded-lg font-medium transition-all hover:scale-105">
-              Get Started
+              Documentation
+            </Link>
+            <button className="px-5 py-2 bg-[#007acc70] text-white rounded-lg font-medium transition-all hover:bg-[#007acc90]">
+              Get started
             </button>
           </div>
 
           <button
             className="md:hidden text-white"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X /> : <Menu />}
           </button>
         </div>
-      </div>
 
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-black/95 backdrop-blur-lg border-t border-[#007acc]/20">
-          <div className="px-4 py-6 space-y-4">
-            <a
-              href="/#features"
-              onClick={(e) => handleNavClick(e, "features")}
-              className="block text-gray-300 hover:text-[#66a3ff]"
-            >
-              Features
-            </a>
-            <a
-              href="/#use-cases"
-              onClick={(e) => handleNavClick(e, "use-cases")}
-              className="block text-gray-300 hover:text-[#66a3ff]"
-            >
-              Use Cases
-            </a>
-            <a
-              href="/docs"
-              className="block text-gray-300 hover:text-[#66a3ff]"
-            >
-              Docs
-            </a>
-            <a
-              href="/#pricing"
-              onClick={(e) => handleNavClick(e, "pricing")}
-              className="block text-gray-300 hover:text-[#66a3ff]"
-            >
-              Pricing
-            </a>
-            <button className="w-full px-6 py-2 bg-[#007acc] hover:bg-[#00509e] rounded-lg font-medium">
-              Get Started
-            </button>
+        {mobileMenuOpen && (
+          <div className="md:hidden pb-4">
+            <div className="py-4 space-y-1">
+              <Link
+                href="/#features"
+                onClick={(e) => handleNavClick(e, "features")}
+                className="block text-gray-300 hover:text-white py-1 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                Features
+              </Link>
+              <Link
+                href="/#use-cases"
+                onClick={(e) => handleNavClick(e, "use-cases")}
+                className="block text-gray-300 hover:text-white py-1 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                Use Cases
+              </Link>
+              <Link
+                href="/docs"
+                className="block text-gray-300 hover:text-white py-1 rounded-lg hover:bg-white/5 transition-colors"
+              >
+                Documentation
+              </Link>
+              <div className="pt-3">
+                <button className="w-full px-4 py-3 bg-[#007acc70] text-white text-sm rounded-lg font-medium transition-all hover:bg-[#007acc90]">
+                  Get started
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </nav>
   );
 }

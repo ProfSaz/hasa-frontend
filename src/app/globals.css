@@ -1,32 +1,9 @@
 @import "tailwindcss";
 
-/* Custom scrollbar for dark themes */
-::-webkit-scrollbar {
-  width: 8px;
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
-
-::-webkit-scrollbar-track {
-  background: #2d3748; /* Darker gray for track */
-}
-
-::-webkit-scrollbar-thumb {
-  background: #48bb78; /* A shade of green for the thumb */
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #38a169; /* Slightly darker green on hover */
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Ensure full height for app */
-html,
-body,
-#__next {
-  height: 100%;
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
