@@ -104,7 +104,7 @@ export default function Header() {
             >
               Documentation
             </Link>
-            <button className="px-5 py-2 bg-[#007acc70] text-white rounded-lg font-medium transition-all hover:bg-[#007acc90]">
+            <button className="px-5 py-2 bg-[#007acc70] text-white rounded-lg font-medium transition-all hover:bg-[#007acc90] cursor-pointer">
               Get started
             </button>
           </div>

@@ -85,24 +85,24 @@ export default function DocsLandingPage() {
         <div className="absolute inset-0 bg-gradient-to-br from-[#007acc]/20 via-black to-black"></div>
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDdhY2MiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE2YzAgMi4yMS0xLjc5IDQtNCA0cy00LTEuNzktNC00IDEuNzktNCA0LTQgNCAxLjc5IDQgNHptLTggMGMwIDIuMjEtMS43OSA0LTQgNHMtNC0xLjc5LTQtNCAxLjc5LTQgNC00IDQgMS43OSA0IDR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30"></div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#007acc]/10 border border-[#007acc]/30 rounded-full mb-8">
-              <Zap className="w-4 h-4 text-[#66a3ff]" />
-              <span className="text-sm text-[#66a3ff] font-medium">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#007acc15] border border-[#007acc20] rounded-full mb-8">
+              <Zap className="w-4 h-4 text-[#66a3ff70]" />
+              <span className="text-sm text-[#66a3ff70] font-medium">
                 API v1.0 Documentation
               </span>
             </div>
 
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Build with
-              <span className="bg-gradient-to-r from-[#66a3ff] to-[#007acc] bg-clip-text text-transparent">
+              <span className="bg-[#66a3ff70] bg-clip-text text-transparent">
                 {" "}
                 HASA API
               </span>
             </h1>
 
-            <p className="text-xl text-gray-400 mb-8">
+            <p className="text-base text-[#FFFFFF70] mb-8">
               Comprehensive documentation for integrating wallet infrastructure
               into your application. Choose an API section below to get started.
             </p>
@@ -140,17 +140,17 @@ export default function DocsLandingPage() {
                   {section.icon}
                 </div>
 
-                <h3 className="text-2xl font-bold mb-2 group-hover:text-[#66a3ff] transition-colors">
+                <h3 className="text-xl font-bold mb-2 transition-colors">
                   {section.title}
                 </h3>
 
-                <p className=" text-gray-400 mb-4">{section.description}</p>
+                <p className="text-[#FFFFFF70] text-sm mb-4">{section.description}</p>
 
                 <div className="flex flex-wrap gap-2 mb-4">
                   {section.topics.map((topic, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-1 bg-gray-800 text-gray-400 text-xs rounded-md"
+                      className="px-2 py-1 bg-[#A1A1A120] text-[#FFFFFF70] text-xs rounded-md"
                     >
                       {topic}
                     </span>
@@ -169,18 +169,18 @@ export default function DocsLandingPage() {
 
       {/* Quick Links */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="bg-gradient-to-r from-[#007acc]/10 to-[#007acc]/5 border border-[#007acc]/20 rounded-xl p-8">
+        <div className="bg-[#18181b80] border border-[#A1A1A120] rounded-xl p-8">
           <div className="grid md:grid-cols-3 gap-8">
             <div className="flex flex-col">
               <Key className="w-6 h-6 text-[#66a3ff] mb-3" />
               <h4 className="font-bold mb-2">Authentication</h4>
-              <p className="text-gray-400 text-sm mb-3">
+              <p className="text-[#FFFFFF70] text-sm mb-3">
                 Learn how to authenticate your API requests using HMAC
                 signatures
               </p>
               <Link
                 href="/docs/reference#authentication"
-                className="mt-auto text-[#66a3ff] text-sm font-medium hover:underline"
+                className="mt-auto text-[#007acc70] text-sm font-medium hover:underline"
               >
                 View Guide →
               </Link>
@@ -189,12 +189,12 @@ export default function DocsLandingPage() {
             <div className="flex flex-col">
               <Zap className="w-6 h-6 text-[#66a3ff] mb-3" />
               <h4 className="font-bold mb-2">Quick Start</h4>
-              <p className="text-gray-400 text-sm mb-3">
+              <p className="text-[#FFFFFF70] text-sm mb-3">
                 Get up and running with HASA API in under 5 minutes
               </p>
               <Link
                 href="/docs/reference#quick-start"
-                className="mt-auto text-[#66a3ff] text-sm font-medium hover:underline"
+                className="mt-auto text-[#007acc70] text-sm font-medium hover:underline"
               >
                 Start Building →
               </Link>
@@ -203,12 +203,12 @@ export default function DocsLandingPage() {
             <div className="flex flex-col">
               <Book className="w-6 h-6 text-[#66a3ff] mb-3" />
               <h4 className="font-bold mb-2">Code Examples</h4>
-              <p className="text-gray-400 text-sm mb-3">
+              <p className="text-[#FFFFFF70] text-sm mb-3">
                 Browse code samples in cURL, JavaScript, and Python
               </p>
               <Link
                 href="/docs/reference"
-                className="mt-auto text-[#66a3ff] text-sm font-medium hover:underline"
+                className="mt-auto text-[#007acc70] text-sm font-medium hover:underline"
               >
                 View Examples →
               </Link>

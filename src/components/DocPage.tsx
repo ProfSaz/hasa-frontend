@@ -2199,8 +2199,8 @@ print(stats)`,
   const nextPage = currentPageIndex < allPages.length - 1 ? allPages[currentPageIndex + 1] : null;
 
 return (
-    <div className="min-h-screen bg-black text-[#F9F9F9]">
-      <header className="bg-[#0a0a0a] border-b border-[#007acc]/20 sticky top-0 z-50">
+    <div className="min-h-screen bg-[#0a0a0a] text-[#F9F9F9]">
+      <header className="bg-[#0a0a0a] border-b border-[#A1A1A120] sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
@@ -2229,7 +2229,7 @@ return (
           ref={dropdownRef}
           className={`${
             mobileMenuOpen ? 'block' : 'hidden'
-          } md:block min-w-64 lg:w-72 border-r border-[#007acc]/20 bg-[#0a0a0a] p-4 lg:p-6 fixed md:sticky top-16 left-0 z-40 overflow-y-auto h-[calc(100vh-4rem)] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-[#0a0a0a] [&::-webkit-scrollbar-thumb]:bg-[#007acc]/30 [&::-webkit-scrollbar-thumb]:rounded-full`}
+          } md:block min-w-64 lg:w-72 border-r border-[#A1A1A120] bg-[#0a0a0a] p-4 lg:p-6 fixed md:sticky top-16 left-0 z-40 overflow-y-auto h-[calc(100vh-4rem)] [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-[#0a0a0a] [&::-webkit-scrollbar-thumb]:bg-[#007acc]/30 [&::-webkit-scrollbar-thumb]:rounded-full`}
         >
           {/* Search */}
           <div className="relative mb-6">
@@ -2239,7 +2239,7 @@ return (
               placeholder="Search documentation..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-900 border border-[#007acc]/20 rounded-lg text-sm focus:outline-none focus:border-[#007acc]/50"
+              className="w-full pl-10 pr-4 py-2 bg-gray-900 border border-[#A1A1A120] rounded-lg text-sm focus:outline-none focus:border-[#007acc]/50"
             />
           </div>
 
@@ -2310,7 +2310,7 @@ return (
                       }`}>
                         {currentContent.method}
                       </span>
-                      <div className="text-xs md:text-sm text-[#F9F9F9] font-mono bg-black/40 px-2.5 py-1.5 md:py-1 md:px-3 rounded-lg break-all border border-[#007acc]/30 whitespace-nowrap w-full md:w-auto overflow-x-auto scrollbar-hide">
+                      <div className="text-xs md:text-sm text-[#F9F9F9] font-mono bg-black/40 px-2.5 py-1.5 md:py-1 md:px-3 rounded-lg break-all border border-[#007acc]/30 whitespace-nowrap w-auto overflow-x-auto scrollbar-hide">
                         {currentContent.endpoint}
                       </div>
                       <button
@@ -2377,7 +2377,7 @@ return (
                     </div>
                     
                     <div className="mb-4 w-full overflow-hidden">
-                      <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 md:flex-wrap md:p-1 md:bg-gray-900/50 md:rounded-lg md:border md:border-[#007acc]/20 [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#007acc]/30 [&::-webkit-scrollbar-thumb]:rounded-full">
+                      <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 md:flex-wrap [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-[#007acc]/30 [&::-webkit-scrollbar-thumb]:rounded-full">
                         {Object.keys(currentContent.code).map((lang) => (
                           <button
                             key={lang}
@@ -2413,11 +2413,11 @@ return (
                         
                         <div className="bg-[#0a0a0a] border border-gray-800 rounded-lg md:rounded-xl overflow-hidden shadow-2xl">
                           <div className="hidden md:flex items-center gap-2 px-4 py-2.5 bg-[#1a1a1a] border-b border-gray-800">
-                            <div className="flex gap-1.5">
+                            {/* <div className="flex gap-1.5">
                               <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
                               <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
                               <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
-                            </div>
+                            </div> */}
                             <span className="text-xs text-[#FFFFFF90] font-mono ml-2">{activeTab}.{activeTab === 'curl' ? 'sh' : activeTab === 'javascript' ? 'js' : activeTab === 'python' ? 'py' : 'txt'}</span>
                           </div>
                           
@@ -2483,7 +2483,7 @@ return (
                   </div>
                 )}
                 
-                <div className="flex items-center justify-between mt-12 pt-8 border-t border-[#007acc]/20">
+                <div className="flex items-center justify-between mt-12 pt-8 border-t border-[#A1A1A120]">
                   {previousPage ? (
                     <button
                       onClick={() => {
