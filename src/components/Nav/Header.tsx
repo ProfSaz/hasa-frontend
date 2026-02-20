@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Menu, X, Wallet } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -78,9 +79,7 @@ export default function Header() {
             href="/"
             className="text-[18px] font-semibold flex items-center text-white"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#007acc70] flex items-center justify-center mr-2">
-              <Wallet className="text-white w-5 h-5" />
-            </div>
+            <Image src="/images/hasa.png" alt="HASA Logo" width={40} height={40} />
             HASA
           </Link>
 

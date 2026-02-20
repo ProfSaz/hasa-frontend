@@ -1,6 +1,7 @@
 import React from "react";
 import { Wallet } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -8,8 +9,8 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-16">
         <div className="grid md:grid-cols-5 gap-8 mb-8">
           <div className="col-span-2">
-            <div className="text-2xl flex font-bold text-[#F9F9F9] mb-4">
-              <Wallet className="text-[#007acc80] mt-1 mr-1.5" /> HASA
+            <div className="text-2xl flex items-center font-bold text-[#F9F9F9] mb-4">
+              <Image src="/images/hasa.png" alt="HASA Logo" width={45} height={45} /> HASA
             </div>
             <p className="text-[#FFFFFF80] text-sm">
               Stablecoin wallet infrastructure for the Aptos economy

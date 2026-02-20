@@ -126,16 +126,16 @@ export default function DocsLandingPage() {
             <Link
               key={section.id}
               href={`/docs/reference#${section.id}`}
-              className="group relative bg-gray-900 border border-[#007acc]/20 rounded-xl p-6 hover:border-[#007acc]/50 transition-all cursor-pointer hover:scale-105 duration-300"
+              className="flex flex-col flex-1 group relative bg-gray-900 border border-[#007acc]/20 rounded-xl p-6 hover:border-[#007acc]/50 transition-all cursor-pointer hover:scale-105 duration-300"
             >
               {/* Gradient Background on Hover */}
               <div
                 className={`absolute inset-0 bg-gradient-to-br ${section.color} opacity-0 group-hover:opacity-10 rounded-xl transition-opacity`}
               ></div>
 
-              <div className="relative">
+              <div className="flex flex-col flex-1 relative">
                 <div
-                  className={`inline-flex p-3 bg-gradient-to-br ${section.color} rounded-lg mb-4`}
+                  className={`inline-flex p-3 w-fit bg-gradient-to-br ${section.color} rounded-lg mb-4`}
                 >
                   {section.icon}
                 </div>
@@ -144,7 +144,7 @@ export default function DocsLandingPage() {
                   {section.title}
                 </h3>
 
-                <p className="text-gray-400 mb-4">{section.description}</p>
+                <p className=" text-gray-400 mb-4">{section.description}</p>
 
                 <div className="flex flex-wrap gap-2 mb-4">
                   {section.topics.map((topic, idx) => (
@@ -157,7 +157,7 @@ export default function DocsLandingPage() {
                   ))}
                 </div>
 
-                <div className="flex items-center text-[#66a3ff] font-medium group-hover:gap-2 transition-all">
+                <div className="mt-auto flex items-center text-[#66a3ff] font-medium group-hover:gap-2 transition-all">
                   <span>Explore</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -171,7 +171,7 @@ export default function DocsLandingPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div className="bg-gradient-to-r from-[#007acc]/10 to-[#007acc]/5 border border-[#007acc]/20 rounded-xl p-8">
           <div className="grid md:grid-cols-3 gap-8">
-            <div>
+            <div className="flex flex-col">
               <Key className="w-6 h-6 text-[#66a3ff] mb-3" />
               <h4 className="font-bold mb-2">Authentication</h4>
               <p className="text-gray-400 text-sm mb-3">
@@ -180,13 +180,13 @@ export default function DocsLandingPage() {
               </p>
               <Link
                 href="/docs/reference#authentication"
-                className="text-[#66a3ff] text-sm font-medium hover:underline"
+                className="mt-auto text-[#66a3ff] text-sm font-medium hover:underline"
               >
                 View Guide →
               </Link>
             </div>
 
-            <div>
+            <div className="flex flex-col">
               <Zap className="w-6 h-6 text-[#66a3ff] mb-3" />
               <h4 className="font-bold mb-2">Quick Start</h4>
               <p className="text-gray-400 text-sm mb-3">
@@ -194,13 +194,13 @@ export default function DocsLandingPage() {
               </p>
               <Link
                 href="/docs/reference#quick-start"
-                className="text-[#66a3ff] text-sm font-medium hover:underline"
+                className="mt-auto text-[#66a3ff] text-sm font-medium hover:underline"
               >
                 Start Building →
               </Link>
             </div>
 
-            <div>
+            <div className="flex flex-col">
               <Book className="w-6 h-6 text-[#66a3ff] mb-3" />
               <h4 className="font-bold mb-2">Code Examples</h4>
               <p className="text-gray-400 text-sm mb-3">
@@ -208,7 +208,7 @@ export default function DocsLandingPage() {
               </p>
               <Link
                 href="/docs/reference"
-                className="text-[#66a3ff] text-sm font-medium hover:underline"
+                className="mt-auto text-[#66a3ff] text-sm font-medium hover:underline"
               >
                 View Examples →
               </Link>
